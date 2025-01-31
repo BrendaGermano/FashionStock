@@ -4,8 +4,6 @@ namespace FashionStock.WebApi.Models
 {
     public class ProductModel
     {
-        public class Product
-        {
             public int Id { get; set; }
             public string Name { get; set; }
             public string Description { get; set; }
@@ -15,6 +13,6 @@ namespace FashionStock.WebApi.Models
             public DateTime CreatedAt { get; set; }
             public DateTime UpdatedAt { get; set; }
 
-        }
+
     }
 }
