@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FashionStock", "FashionStoc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FashionStock.WebApi", "FashionStock.WebApi\FashionStock.WebApi.csproj", "{154140E9-55C3-497F-9221-386BDB67B66D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FashionStock.WebApplication", "FashionStock.WebApplication\FashionStock.WebApplication.csproj", "{B6D1EFED-E637-435E-9611-AEE7BF5E96DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{50F58EF2-731C-4578-8AF2-B8022961E38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F58EF2-731C-4578-8AF2-B8022961E38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50F58EF2-731C-4578-8AF2-B8022961E38D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D1EFED-E637-435E-9611-AEE7BF5E96DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D1EFED-E637-435E-9611-AEE7BF5E96DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D1EFED-E637-435E-9611-AEE7BF5E96DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D1EFED-E637-435E-9611-AEE7BF5E96DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{154140E9-55C3-497F-9221-386BDB67B66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{154140E9-55C3-497F-9221-386BDB67B66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154140E9-55C3-497F-9221-386BDB67B66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
