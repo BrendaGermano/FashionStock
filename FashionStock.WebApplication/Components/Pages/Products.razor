@@ -2,6 +2,7 @@
 @using Refit
 @rendermode InteractiveServer
 @inject IWebApi WebApi
+@inject NavigationManager NavigationManager
 @page "/products"
 
 
@@ -26,7 +27,7 @@
                     <MudTd><MudText Typo="Typo.body1">@context.CategoryId</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd>
-                        <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+                        <MudButton @onclick="() => NavigateDetails(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
                     </MudTd>
                     <MudTd>
                         <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Style="border-color: #FF9800; color: #FF9800;">Delete</MudButton>
@@ -48,8 +49,14 @@
 @code {
     private List<ProductModel> _products { get; set; } = new();
 
+
     protected override async Task OnParametersSetAsync()
     {
         _products = await WebApi.GetProducts();
+    }
+
+    private void NavigateDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/product/{id}", true);
     }
 }
