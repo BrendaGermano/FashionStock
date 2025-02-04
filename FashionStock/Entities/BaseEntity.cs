@@ -8,7 +8,7 @@ namespace FashionStock.Entities
 {
     public class BaseEntity
     {
-        public long id { get; set; }
+        public long Id { get; set; }
         public bool isDeleted { get; set; }
 
     }

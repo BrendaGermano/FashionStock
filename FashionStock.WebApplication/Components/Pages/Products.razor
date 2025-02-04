@@ -1,8 +1,10 @@
-﻿@using FashionStock.WebApi.Models
+﻿@page "/products"
+@using FashionStock.WebApi.Models
 @using Refit
 @rendermode InteractiveServer
 @inject IWebApi WebApi
-@page "/products"
+@inject NavigationManager NavigationManager
+
 
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
@@ -22,14 +24,14 @@
                 <RowTemplate>
                     <MudTd><MudText Typo="Typo.body1">@context.Name</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.Description</MudText></MudTd>
-                    <MudTd><MudText Typo="Typo.body1">@context.Price.ToString("F2")</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@context.Price.ToString("C")</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.CategoryId</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd>
                         <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
                     </MudTd>
                     <MudTd>
-                        <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Style="border-color: #FF9800; color: #FF9800;">Delete</MudButton>
+                       <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Style="border-color: #FF9800; color: #FF9800;" OnClick="() => DeleteProduct(context.Id)">Delete</MudButton>
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>
@@ -40,7 +42,8 @@
             </MudTable>
         </MudCardContent>
         <MudCardActions Class="justify-end">
-            <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Add Product</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;" OnClick="NavigationAdd">Add Product</MudButton>
+
         </MudCardActions>
     </MudCard>
 </MudContainer>
@@ -51,5 +54,16 @@
     protected override async Task OnParametersSetAsync()
     {
         _products = await WebApi.GetProducts();
+    }
+
+    private async void DeleteProduct(long id)
+    {
+        var response = await WebApi.DeleteProduct(id);
+
+    }
+
+    private void NavigationAdd()
+    {
+        NavigationManager.NavigateTo($"addproducts", true);
     }
 }

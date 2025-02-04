@@ -1,4 +1,5 @@
 ﻿using FashionStock.WebApi.Models;
+using Microsoft.AspNetCore.Mvc;
 using Refit;
 namespace FashionStock.WebApplication
 {
@@ -6,5 +7,12 @@ namespace FashionStock.WebApplication
     {
         [Get("/getproducts")]
         Task<List<ProductModel>> GetProducts();
+
+        [Delete("/deleteproducts")]
+        Task<HttpResponseMessage> DeleteProduct(long id);
+
+        [Post("/addproduct")]
+        Task<HttpResponseMessage> AddProduct([FromBody] ProductModel productModel);
+
     }
 }
