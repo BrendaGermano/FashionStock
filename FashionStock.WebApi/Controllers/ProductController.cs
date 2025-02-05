@@ -5,6 +5,8 @@ using FashionStock.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FashionStock.WebApi.Models;
+using System.Collections;
 
 namespace FashionStock.WebApi.Controllers
 {
@@ -25,12 +27,13 @@ namespace FashionStock.WebApi.Controllers
             var productTable = await _businessContext.Products.Where(p => p.isDeleted == false).ToListAsync();
 
             if (!productTable.Any())
-            
+
                 return NotFound();
             else
 
-            return Ok(productTable);
+                return Ok(productTable);
         }
+
 
        
         [HttpDelete("/deleteproducts")]
@@ -88,5 +91,17 @@ namespace FashionStock.WebApi.Controllers
                return BadRequest(); 
 
         }
+
+        [HttpGet("/getproduct")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var productTable = await _businessContext.Products.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id.Equals(id));
+            if (productTable is null)
+                return NotFound();
+            else
+                return Ok(productTable);
+        }
+
+
     }
 }
