@@ -9,8 +9,15 @@ namespace FashionStock.WebApplication
         [Get("/getproducts")]
         Task<List<ProductModel>> GetProducts();
 
+        [Delete("/deleteproducts")]
+        Task<HttpResponseMessage> DeleteProduct(long id);
+
+        [Post("/addproduct")]
+        Task<HttpResponseMessage> AddProduct([FromBody] ProductModel productModel);
+
         [Get("/getproduct")]
         Task<WebApi.Models.ProductModel> GetProduct(int id);
+
 
     }
 }
