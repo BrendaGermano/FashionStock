@@ -24,7 +24,7 @@ namespace FashionStock.WebApi.Controllers
         [HttpGet("/getproducts")]
         public async Task<IActionResult> GetProducts()
         {
-            var productTable = await _businessContext.Products.Where(p => p.isDeleted == false).ToListAsync();
+            var productTable = await _businessContext.Products.Where(p => p.IsDeleted == false).ToListAsync();
 
             if (!productTable.Any())
 
@@ -45,7 +45,7 @@ namespace FashionStock.WebApi.Controllers
             if (product is null)
                 return BadRequest();
 
-            product.isDeleted = true;
+            product.IsDeleted = true;
 
             var result = await _businessContext.SaveChangesAsync();
             if (result.Equals(1))
@@ -100,6 +100,40 @@ namespace FashionStock.WebApi.Controllers
                 return NotFound();
             else
                 return Ok(productTable);
+        }
+        [HttpPut("/updateproduct")]
+        public async Task<IActionResult> UpdateProduct(ProductModel productmodel)
+        {
+            var product = await _businessContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(productmodel.Id));
+
+            if (product is null)
+
+                return BadRequest();
+
+            product.Name = productmodel.Name;
+            product.Description = productmodel.Description;
+            product.Price = productmodel.Price;
+            product.CategoryId = productmodel.CategoryId;
+            product.Quantity = productmodel.Quantity;
+            product.CreatedAt = DateTime.Now;
+            product.UpdatedAt = DateTime.Now;
+
+
+            try
+            {
+                var result = await _businessContext.SaveChangesAsync();
+                if (result.Equals(1))
+                    return Ok();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return BadRequest();
+
         }
 
 

@@ -17,6 +17,8 @@ namespace FashionStock.WebApplication
 
         [Get("/getproduct")]
         Task<WebApi.Models.ProductModel> GetProduct(int id);
+        [Put("/updateproduct")]
+        Task<HttpResponseMessage> UpdateProduct([FromBody] WebApi.Models.ProductModel productModel);
 
 
     }
