@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using FashionStock.WebApi.Models
 @inject IWebApi WebApi
+@inject NavigationManager NavigationManager
 
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
@@ -46,6 +47,7 @@
     private async void SaveProduct()
     {
         var result = await WebApi.UpdateProduct(productModel);
+        NavigationManager.NavigateTo("/products");
 
     }
 
