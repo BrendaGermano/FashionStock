@@ -1,0 +1,81 @@
+﻿@page "/products"
+@using FashionStock.WebApi.Models
+@using Refit
+@rendermode InteractiveServer
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+
+
+
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
+        <MudCardHeader Class="mud-card-header-custom">
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Inventory Management</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTable Items="_products" Dense="true" Hover="true" Bordered="true" Class="mud-table-custom">
+                <HeaderContent>
+                    <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Product Name</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Description</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Price</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Category</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Quantity</MudText></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd><MudText Typo="Typo.body1">@context.Name</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@context.Description</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@context.Price.ToString("C")</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@context.CategoryId</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
+                    <MudTd>
+                        <MudButton @onclick="() => NavigateDetails(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+                    </MudTd>
+                    <MudTd>
+                       <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Style="border-color: #FF9800; color: #FF9800;" OnClick="() => DeleteProduct(context.Id)">Delete</MudButton>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudTd ColSpan="6">
+                        <MudText Typo="Typo.body1" Align="Align.Center" Class="text-secondary">No products available</MudText>
+                    </MudTd>
+                </NoRecordsContent>
+            </MudTable>
+        </MudCardContent>
+        <MudCardActions Class="justify-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;" OnClick="NavigationAdd">Add Product</MudButton>
+
+        </MudCardActions>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private List<ProductModel> _products { get; set; } = new();
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _products = await WebApi.GetProducts();
+    }
+
+
+    private async void DeleteProduct(long id)
+    {
+        var response = await WebApi.DeleteProduct(id);
+
+    }
+
+    private void NavigationAdd()
+    {
+        NavigationManager.NavigateTo($"addproducts", true);
+
+    }
+ 
+    private void NavigateDetails(int id)
+
+    {
+        NavigationManager.NavigateTo($"/product/{id}", true);
+
+    }
+}
