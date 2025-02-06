@@ -101,6 +101,40 @@ namespace FashionStock.WebApi.Controllers
             else
                 return Ok(productTable);
         }
+        [HttpPut("/updateproduct")]
+        public async Task<IActionResult> UpdateProduct(ProductModel productmodel)
+        {
+            var product = await _businessContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(productmodel.Id));
+
+            if (product is null)
+
+                return BadRequest();
+
+            product.Name = productmodel.Name;
+            product.Description = productmodel.Description;
+            product.Price = productmodel.Price;
+            product.CategoryId = productmodel.CategoryId;
+            product.Quantity = productmodel.Quantity;
+            product.CreatedAt = DateTime.Now;
+            product.UpdatedAt = DateTime.Now;
+
+
+            try
+            {
+                var result = await _businessContext.SaveChangesAsync();
+                if (result.Equals(1))
+                    return Ok();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return BadRequest();
+
+        }
 
 
     }
