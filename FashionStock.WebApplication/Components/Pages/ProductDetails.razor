@@ -25,6 +25,7 @@
         </MudPaper>
         <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
             <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton>
         </MudPaper>
     </MudItem>
     <MudItem xs="12" sm="5">
@@ -62,9 +63,16 @@
         productModel = await WebApi.GetProduct(Id);
     }
 
-    private async void SaveProduct()
+    // private async void SaveProduct()
+    // {
+    //     var result = await WebApi.UpdateProduct(productModel);
+    //     NavigationManager.NavigateTo("/products");
+
+    // }
+
+    private async void DeleteProduct(long id)
     {
-        var result = await WebApi.UpdateProduct(productModel);
+        var response = await WebApi.DeleteProduct(id);
         NavigationManager.NavigateTo("/products");
 
     }
