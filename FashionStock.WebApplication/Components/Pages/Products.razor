@@ -30,7 +30,7 @@
                     <MudTd><MudText Typo="Typo.body1">@context.CategoryId</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd>
-                        <MudButton @onclick="() => NavigateDetails(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+                        <MudButton @onclick="() => NavigateDetails(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Menu" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white; width:118px">Details</MudButton>
                     </MudTd>
                     <MudTd>
                        <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Style="border-color: #FF9800; color: #FF9800;" OnClick="() => DeleteProduct(context.Id)">Delete</MudButton>

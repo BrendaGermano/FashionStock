@@ -1,0 +1,87 @@
+﻿@page "/product/{id:int}"
+@rendermode InteractiveServer
+@using FashionStock.WebApi.Models
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+<MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 60vh">
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mt-3" Style="background-color: #E3F2FD;">
+
+                <MudText Typo="Typo.body2" Color="Color.Primary">Name</MudText>
+                <MudText Class="mb-3">@productModel.Name</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">Description</MudText>
+            <MudText Class="mb-3 overflow-auto" Style="max-height:150px;">
+                @productModel.Description
+                 
+            </MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">Price</MudText>
+                <MudText Class="mb-3">@productModel.Price €</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">Quantity</MudText>
+                <MudText Class="mb-3">@productModel.Quantity</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">Category</MudText>
+                <MudText Class="mb-3">@productModel.CategoryId</MudText>
+  
+        </MudPaper>
+        <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
+            <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="5">
+        <MudContainer Class="pa-4 mud-height-full">
+            <MudCarousel Class="mud-width-full" Style="height:50vh; width:50vh;" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" TData="object">
+                <MudCarouselItem Transition="Transition.None" Color="@Color.Primary">
+                    <div class="d-flex" style="height:100%">
+                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                    </div>
+                </MudCarouselItem>
+                <MudCarouselItem Transition="Transition.None" Color="@Color.Secondary">
+                    <div class="d-flex" style="height:100%">
+                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                    </div>
+                </MudCarouselItem>
+                <MudCarouselItem Transition="Transition.None">
+                    <div class="d-flex" style="height:100%">
+                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Color="@Color.Primary" Size="@Size.Large" />
+                    </div>
+                </MudCarouselItem>
+            </MudCarousel>
+        </MudContainer>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ProductModel productModel { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        productModel = await WebApi.GetProduct(Id);
+    }
+
+    // private async void SaveProduct()
+    // {
+    //     var result = await WebApi.UpdateProduct(productModel);
+    //     NavigationManager.NavigateTo("/products");
+
+    // }
+
+    private async void DeleteProduct(long id)
+    {
+        var response = await WebApi.DeleteProduct(id);
+        NavigationManager.NavigateTo("/products");
+
+    }
+
+    private void NavigateDetails(int id)
+
+    {
+        NavigationManager.NavigateTo($"/product/edit/{id}", true);
+
+    }
+
+}
