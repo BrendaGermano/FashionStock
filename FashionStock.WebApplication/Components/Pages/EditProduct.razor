@@ -24,7 +24,7 @@
                                   @bind-Value="productModel.Quantity" InputType="InputType.Number" />
                         </MudCardContent>
                             <MudCardActions Class="justify-end">
-                                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="GoBack">Cancel</MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="() => GoBack(productModel.Id)">Cancel</MudButton>
                                 <MudButton ButtonType="ButtonType.Submit" Class="ml-2" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Save Product</MudButton>
                             </MudCardActions>
                     </MudCard>
@@ -52,9 +52,9 @@
 
     }
 
-    private void GoBack()
+    private void GoBack(int id)
     {
-        NavigationManager.NavigateTo("/products");
+        NavigationManager.NavigateTo($"/product/{id}", true);
     }
 
 }
