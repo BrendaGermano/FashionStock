@@ -20,6 +20,11 @@ namespace FashionStock.WebApplication
         [Put("/updateproduct")]
         Task<HttpResponseMessage> UpdateProduct([FromBody] WebApi.Models.ProductModel productModel);
 
-
+        [Post("/addimage")]
+        Task<HttpResponseMessage> AddImage([FromBody] ImageModel imageModel);
+        [Get("/getimages")]
+        Task<List<ImageModel>> GetImages();
+        [Delete("/deleteimage")]
+        Task<HttpResponseMessage> DeleteImage(long id);
     }
 }

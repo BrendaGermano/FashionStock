@@ -26,49 +26,148 @@
         <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
             <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
             <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton>
+            <MudButton OnClick="OpenForm" Class="ml-1" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Add Image</MudButton>
+
         </MudPaper>
     </MudItem>
     <MudItem xs="12" sm="5">
         <MudContainer Class="pa-4 mud-height-full">
             <MudCarousel Class="mud-width-full" Style="height:50vh; width:50vh;" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" TData="object">
-                <MudCarouselItem Transition="Transition.None" Color="@Color.Primary">
-                    <div class="d-flex" style="height:100%">
-                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                    </div>
-                </MudCarouselItem>
-                <MudCarouselItem Transition="Transition.None" Color="@Color.Secondary">
-                    <div class="d-flex" style="height:100%">
-                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
-                    </div>
-                </MudCarouselItem>
-                <MudCarouselItem Transition="Transition.None">
-                    <div class="d-flex" style="height:100%">
-                        <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Color="@Color.Primary" Size="@Size.Large" />
-                    </div>
-                </MudCarouselItem>
+                @if (!Images.Where(i => i.ProductId.Equals(productModel.Id)).Any())
+                {
+                    <MudCarouselItem Transition="Transition.None" Color="@Color.Primary">
+                        <div class="d-flex" style="height:50vh; width:50vh;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;text-align: center;">
+                            <img src="" alt="no image found">
+                        </div>
+                    </MudCarouselItem>
+
+                }
+                else
+                {
+                    @foreach (var image in Images.Where(i => i.ProductId.Equals(productModel.Id) && i.IsDeleted == false))
+                    {
+                        <MudCarouselItem Transition="Transition.None" Color="@Color.Primary">
+                            <div class="d-flex" style="height:50vh;">
+                                <img src="@image.Url" alt="@image.Name">
+                            </div>
+                        </MudCarouselItem>
+                    }
+                }
+
             </MudCarousel>
         </MudContainer>
     </MudItem>
+    <MudPaper Class="pa-4 mt-4" Style=" display: flex; background-color: #E3F2FD; width:130vh; overflow:auto;">
+
+        @if (Images.Where(i => i.ProductId.Equals(productModel.Id)).Any())
+        {
+            
+            @foreach (var image in Images.Where(i => i.ProductId.Equals(productModel.Id)))
+            {
+                <div>
+                        <div class="position-relative" style="margin-left:20px">
+                            <img id="deleteimage" @onclick="() => DeleteImage(image.Id)" style="height:17vh;flex-shrink: 0; cursor:pointer" src="@image.Url" alt="@image.Name">
+                        </div>
+
+                </div>
+
+                    <style>
+                        div:hover > div:nth-child(1) {
+                            opacity: 1;
+
+                        }
+
+                        div:hover > #deleteimage {
+                            opacity: 0.6;
+                            transition: 0.3s;
+                            filter: grayscale(100%);
+                        }
+                </style>
+
+            }
+
+        }
+        else
+        {
+        <div class="position-relative" style="margin-left:20px">
+                    <MudText Color="Color.Primary">This product has no images, try adding one first.</MudText>
+        </div>   
+        }
+
+    </MudPaper>
+
+
 </MudGrid>
 
 
+    @if (IsFormOpen)
+    {
+    <div style="position: fixed;top: 0;left: 0;right: 0;bottom: 0;background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); z-index: 1000;">
+        <MudContainer MaxWidth="MaxWidth.Medium" Style="margin-top: 200px">
+            <EditForm Model="@imageModel">
+                <MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 100vh;">
+                    <MudItem xs="12" sm="7">
+                        <MudCard Style="background-color: #E3F2FD;">
+                            <MudCardHeader Class="mud-card-header-custom">
+                                <MudText Typo="Typo.h6" Align="Align.Center" Class="text-primary">Insert image URL</MudText>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudTextField Class="text-primary" Label="Image Url"
+                                              @bind-Value="imageModel.Url" Required="true"/>
+                                <MudTextField Label="Image Name" Class="mt-3 text-primary"
+                                              @bind-Value="imageModel.Name" Required="false"/>
+                            </MudCardContent>
+                            <MudCardActions Class="justify-end">
+                                <MudButton OnClick="OpenForm" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Close" Class="ml-1">Close</MudButton>
+                                <MudButton OnClick="SaveImage" Class="ml-2" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Save</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudContainer>
+        </div>
+    }
+
 @code {
+
+    private bool IsFormOpen { get; set; } = false;
+
+
     [Parameter]
     public int Id { get; set; }
 
     private ProductModel productModel { get; set; } = new();
 
+    private ImageModel imageModel { get; set; } = new();
+
+    private List<ImageModel> Images { get; set; } = new();
+
     protected override async Task OnParametersSetAsync()
     {
+        Images = await WebApi.GetImages();
         productModel = await WebApi.GetProduct(Id);
+        StateHasChanged();
     }
 
-    // private async void SaveProduct()
-    // {
-    //     var result = await WebApi.UpdateProduct(productModel);
-    //     NavigationManager.NavigateTo("/products");
+    private void OpenForm()
+    {
+        IsFormOpen = !IsFormOpen;
+    }
 
-    // }
+    private async void SaveImage()
+    {
+        imageModel.ProductId = productModel.Id;
+        var result = await WebApi.AddImage(imageModel);
+        NavigationManager.NavigateTo($"/product/{productModel.Id}", true);
+
+    }
+
+    private async void DeleteImage(long id)
+    {
+        var response = await WebApi.DeleteImage(id);
+        NavigationManager.NavigateTo($"/product/{productModel.Id}", true);
+    }
 
     private async void DeleteProduct(long id)
     {
