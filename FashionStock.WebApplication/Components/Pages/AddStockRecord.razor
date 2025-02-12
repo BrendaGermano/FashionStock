@@ -13,27 +13,27 @@
         </MudCardHeader>
 
         <MudCardContent>
-            <EditForm FormName="AddStockRecordForm" Model="@stockRecordModel" OnValidSubmit="SaveStockRecord">
+            <EditForm FormName="AddStockRecordForm" Model="stockRecordModel" OnValidSubmit="AddRecord">
                 <DataAnnotationsValidator />
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudTextField Label="Produto" @bind-Value="@stockRecordModel.ProductId" Required="true" />
+                        <MudTextField Label="Produto" @bind-Value="stockRecordModel.ProductId" Required="true" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudTextField Label="Usuário" @bind-Value="@stockRecordModel.UserId" Required="true" />
+                        <MudTextField Label="Usuário" @bind-Value="stockRecordModel.UserId" Required="true" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudTextField Label="Tipo de Registro" @bind-Value="@stockRecordModel.RecordTypeId" Required="true" Type="number" />
+                        <MudTextField Label="Tipo de Registro" @bind-Value="stockRecordModel.RecordTypeId" Required="true" Type="number" />
 
                     </MudItem>
                     <MudItem xs="6">
-                        <MudTextField Label="Quantidade" @bind-Value="@stockRecordModel.Quantity" Required="true" Type="number" />
+                        <MudTextField Label="Quantidade" @bind-Value="stockRecordModel.Quantity" Required="true" Type="number" />
                     </MudItem>
                 </MudGrid>
 
                 <MudCardActions Class="justify-end mt-4">
                     <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" @onclick="SaveStockRecord">Save</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" >Save</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>
@@ -56,7 +56,7 @@
         newStockRecord.CreatedAt = DateTime.Now;
         newStockRecord.UpdatedAt = DateTime.Now;
         newStockRecord.Id = 0;
-            
+
         try
         {
             var stringJson = new StringContent(
@@ -91,6 +91,10 @@
     {
         NavigationManager.NavigateTo("/stockrecords");
     }
-       
+
+    private async Task AddRecord()
+    {
+        var result = await WebApi.AddRecord(stockRecordModel);
+    }
 
 }

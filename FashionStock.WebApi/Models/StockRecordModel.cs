@@ -5,7 +5,7 @@ namespace FashionStock.WebApi.Models
 
     public class StockRecordModel 
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public long ProductId { get; set; }
         public Product Product { get; set; }
         public int UserId { get; set; }

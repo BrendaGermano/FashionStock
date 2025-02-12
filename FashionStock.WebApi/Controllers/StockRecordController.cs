@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FashionStock.WebApi.Models;
 using System.Collections;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 namespace FashionStock.WebApi.Controllers
@@ -33,7 +34,7 @@ namespace FashionStock.WebApi.Controllers
             return Ok(stockRecords);
         }
 
-        [HttpPost("")]
+        [HttpPost("/addstockrecord")]
         public async Task<IActionResult> AddStockRecord([FromBody] StockRecordModel model)
         {
             if (model == null)
@@ -59,7 +60,34 @@ namespace FashionStock.WebApi.Controllers
 
             return Ok(stockRecord);
         }
-        
+
+        [HttpPost("/addrecord")]
+        public async Task<IActionResult> AddRecord(StockRecordModel recordModel)
+        {
+            var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.Id.Equals(recordModel.Id));
+
+            if (record is not null)
+                return BadRequest();
+
+
+            var newRecord = new StockRecord();
+            newRecord.ProductId = recordModel.ProductId;
+            newRecord.UserId = recordModel.UserId;
+            newRecord.RecordTypeId = recordModel.RecordTypeId;
+            newRecord.Quantity = recordModel.Quantity;
+            newRecord.CreatedAt = DateTime.UtcNow;
+            newRecord.UpdatedAt = DateTime.UtcNow;
+
+            _businessContext.StockRecords.Add(newRecord);
+
+            var result = await _businessContext.SaveChangesAsync();
+
+            if (result.Equals(1))
+                return Ok();
+
+            return BadRequest();
+        }
+
 
     }
 }

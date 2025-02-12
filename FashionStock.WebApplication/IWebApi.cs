@@ -26,5 +26,7 @@ namespace FashionStock.WebApplication
         [Post("/addstockrecord")]
         Task<HttpResponseMessage> AddStockRecord([FromBody] StockRecordModel model);
 
+        [Post("/addrecord")]
+        Task<HttpResponseMessage> AddRecord([FromBody] WebApi.Models.StockRecordModel recordModel);
     }
 }
