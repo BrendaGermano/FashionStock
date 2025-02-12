@@ -1,0 +1,96 @@
+﻿@page "/addstockrecords"
+@using FashionStock.WebApi.Models
+@rendermode InteractiveServer
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
+    <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
+        <MudCardHeader>
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Adicionar Registro de Estoque</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <EditForm FormName="AddStockRecordForm" Model="@stockRecordModel" OnValidSubmit="SaveStockRecord">
+                <DataAnnotationsValidator />
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField Label="Produto" @bind-Value="@stockRecordModel.ProductId" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField Label="Usuário" @bind-Value="@stockRecordModel.UserId" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField Label="Tipo de Registro" @bind-Value="@stockRecordModel.RecordTypeId" Required="true" Type="number" />
+
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField Label="Quantidade" @bind-Value="@stockRecordModel.Quantity" Required="true" Type="number" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudCardActions Class="justify-end mt-4">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" @onclick="SaveStockRecord">Save</MudButton>
+                </MudCardActions>
+            </EditForm>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+
+@code {
+    private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
+
+    private async Task SaveStockRecord()
+    {
+
+        var newStockRecord = new StockRecordModel();
+
+        newStockRecord.ProductId = stockRecordModel.ProductId;
+        newStockRecord.UserId = stockRecordModel.UserId;
+        newStockRecord.RecordTypeId = stockRecordModel.RecordTypeId;
+        newStockRecord.Quantity = stockRecordModel.Quantity;
+        newStockRecord.CreatedAt = DateTime.Now;
+        newStockRecord.UpdatedAt = DateTime.Now;
+        newStockRecord.Id = 0;
+            
+        try
+        {
+            var stringJson = new StringContent(
+               System.Text.Json.JsonSerializer.Serialize(newStockRecord),
+               System.Text.Encoding.UTF8,
+               "application/json"
+        );
+
+
+            HttpClientHandler handler = new HttpClientHandler();
+
+            using (var client = new HttpClient(handler, false))
+            {
+                var response = await client.PostAsync("https://localhost:7281/addstockrecord", stringJson);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/stockrecords");
+
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            throw;
+        }
+    }
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/stockrecords");
+    }
+       
+
+}

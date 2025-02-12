@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FashionStock.Entities;
 
-namespace FashionStock.Entities
+namespace FashionStock.WebApi.Models
 {
-    public class StockRecord : BaseEntity
+
+    public class StockRecordModel 
     {
-        public long ProductId {  get; set; }
+        public int Id { get; set; }
+        public long ProductId { get; set; }
         public Product Product { get; set; }
         public int UserId { get; set; }
-        public long RecordTypeId { get; set; }
+        public long RecordTypeId { get; set; } 
         public RecordType RecordType { get; set; }
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
