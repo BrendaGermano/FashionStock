@@ -13,8 +13,7 @@
         </MudCardHeader>
 
         <MudCardContent>
-            <EditForm FormName="AddStockRecordForm" Model="stockRecordModel" OnValidSubmit="AddRecord">
-                <DataAnnotationsValidator />
+            <EditForm FormName="AddStockRecordForm" Model="stockRecordModel">
                 <MudGrid>
                     <MudItem xs="12">
                         <MudTextField Label="Produto" @bind-Value="stockRecordModel.ProductId" Required="true" />
@@ -33,7 +32,7 @@
 
                 <MudCardActions Class="justify-end mt-4">
                     <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" >Save</MudButton>
+                    <MudButton OnClick="AddNewRecord" Variant="Variant.Filled" Color="Color.Success" Class="ml-2">Save</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>
@@ -43,6 +42,12 @@
 
 @code {
     private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
+
+    private async Task AddNewRecord()
+    {
+        var result = await WebApi.SaveStockRecord(stockRecordModel);
+    }
+
 
     private async Task SaveStockRecord()
     {
@@ -92,9 +97,9 @@
         NavigationManager.NavigateTo("/stockrecords");
     }
 
-    private async Task AddRecord()
-    {
-        var result = await WebApi.AddRecord(stockRecordModel);
-    }
+    // private async Task AddRecord()
+    // {
+    //     var result = await WebApi.AddRecord(stockRecordModel);
+    // }
 
 }

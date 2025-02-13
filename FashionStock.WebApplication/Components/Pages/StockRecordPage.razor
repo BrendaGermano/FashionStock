@@ -1,5 +1,6 @@
 ﻿@page "/stockrecords"
 @inject IWebApi WebApi
+@using FashionStock.Entities
 @using FashionStock.WebApi.Models
 @using MudBlazor
 @rendermode InteractiveServer
@@ -25,8 +26,8 @@
                     <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Actions</MudText></MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd><MudText Typo="Typo.body1">@context.Product.Name</MudText></MudTd>
-                    <MudTd><MudText Typo="Typo.body1">@context.RecordType.Name</MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@GetProductName(context.ProductId) </MudText></MudTd>
+                    <MudTd><MudText Typo="Typo.body1">@GetRecordTypeName(context.RecordTypeId)</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.CreatedAt.ToString("g")</MudText></MudTd>
                     <MudTd>
@@ -58,7 +59,10 @@
 
 
 @code {
+
+    private List<ProductModel> _products { get; set; } = new();
     private List<StockRecordModel> _stockRecords = new();
+    private List<RecordTypeModel> _recordTypes { get; set; } = new();
 
     private bool IsLoading = true;
     private string SearchString = string.Empty;
@@ -68,6 +72,8 @@
     protected override async Task OnParametersSetAsync()
     {
         _stockRecords = await WebApi.GetStockRecords();
+        _products = await WebApi.GetProducts();
+        _recordTypes = await WebApi.GetRecordTypes();
     }
 
     private void NavigationAddStock()
@@ -92,12 +98,34 @@
         }
     }
 
+    private string GetProductName(long productId)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (!product.Name.Any())
+
+            return"Unknown Product";
+        return $"{product.Name}";
+
+
+    }
+
+    private string GetRecordTypeName(long recordId)
+    {
+        var recordType = _recordTypes.FirstOrDefault(rt => rt.Id == recordId);
+        if (!recordType.Name.Any())
+
+            return "Unknown Record Type";
+        return $"{recordType.Name}";
+
+
+    }
+
     private bool FilterFunc(StockRecordModel record)
     {
         if (string.IsNullOrWhiteSpace(SearchString))
             return true;
-        return record.Product.Name.Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
-               record.RecordType.Name.Contains(SearchString, StringComparison.OrdinalIgnoreCase);
+        return GetProductName(record.ProductId).Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+               GetRecordTypeName(record.RecordTypeId).Contains(SearchString, StringComparison.OrdinalIgnoreCase);
     }
 
     
