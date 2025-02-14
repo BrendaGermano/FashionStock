@@ -19,7 +19,7 @@ namespace FashionStock.WebApi.Controllers
         [HttpGet("/getcategories")]
         public async Task<IActionResult> GetCategories()
         {
-            var categoryTable = await _businessContext.Categories.Where(i => i.IsDeleted == false).ToListAsync();
+            var categoryTable = await _businessContext.Categories.Where(c => c.IsDeleted == false).ToListAsync();
 
             if (!categoryTable.Any())
 
