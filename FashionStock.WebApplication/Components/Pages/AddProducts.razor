@@ -29,7 +29,13 @@
                         <MudTextField Label="Quantity" @bind-Value="@productModel.Quantity" Required="true" Type="number" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudTextField Label="Category" @bind-Value="@productModel.CategoryId" Required="true" Type="number" />
+                        <MudSelect @bind-Value="@productModel.CategoryId" Label="Choose a Category">
+                            @foreach (var category in _categories)
+                            {
+                                <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>    
+                            }
+                        </MudSelect>
+                        @* <MudTextField Label="Category" @bind-Value="@productModel.CategoryId" Required="true" Type="number" /> *@
                     </MudItem>
                 </MudGrid>
                 <MudCardActions Class="justify-end mt-4">
@@ -44,6 +50,13 @@
 
 @code {
     private ProductModel productModel { set; get; } = new();
+
+    private List<CategoryModel> _categories { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _categories = await WebApi.GetCategories();
+    }
 
     private async void SaveProduct()
     {
