@@ -29,13 +29,16 @@
                         <MudTextField Label="Quantity" @bind-Value="@productModel.Quantity" Required="true" Type="number" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudSelect @bind-Value="@productModel.CategoryId" Label="Choose a Category">
+
+                        <label for="CategorySelect">Select an Option:</label>
+                        <select id="CategorySelect" class="form-control" @bind="@productModel.CategoryId">
+                            <option value="">Select a Category</option>
                             @foreach (var category in _categories)
                             {
-                                <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>    
+                                <option value="@category.Id">@category.Name</option>
                             }
-                        </MudSelect>
-                        @* <MudTextField Label="Category" @bind-Value="@productModel.CategoryId" Required="true" Type="number" /> *@
+                        </select>
+
                     </MudItem>
                 </MudGrid>
                 <MudCardActions Class="justify-end mt-4">
@@ -52,6 +55,7 @@
     private ProductModel productModel { set; get; } = new();
 
     private List<CategoryModel> _categories { get; set; } = new();
+
 
     protected override async Task OnParametersSetAsync()
     {

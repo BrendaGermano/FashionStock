@@ -11,7 +11,7 @@ namespace FashionStock.WebApi.Controllers
     {
         private readonly BusinessContext _businessContext;
 
-        public CategoryController (BusinessContext businessContext)
+        public CategoryController(BusinessContext businessContext)
         {
             _businessContext = businessContext;
         }
@@ -19,14 +19,22 @@ namespace FashionStock.WebApi.Controllers
         [HttpGet("/getcategories")]
         public async Task<IActionResult> GetCategories()
         {
-            var categoryTable = await _businessContext.Categories.Where(c => c.IsDeleted == false).ToListAsync();
-
-            if (!categoryTable.Any())
-
-                return Ok(categoryTable);
+            var categories = await _businessContext.Categories.Where(c => c.IsDeleted == false).ToListAsync();
+            if (!categories.Any())
+                return NotFound();
             else
-
-                return Ok(categoryTable);
+                return Ok(categories);
         }
+
+        [HttpGet("/getcategory")]
+        public async Task<IActionResult> GetCategory(int id)
+        {
+            var categories = await _businessContext.Categories.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id.Equals(id));
+            if (categories is null)
+                return NotFound();
+            else
+                return Ok(categories);
+        }
+
     }
 }

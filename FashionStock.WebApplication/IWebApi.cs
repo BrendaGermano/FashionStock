@@ -30,7 +30,10 @@ namespace FashionStock.WebApplication
         Task<List<RecordTypeModel>> GetRecordTypes();
 
         [Get("/getcategories")]
-        Task<List<CategoryModel>> GetCategories();
+        Task<List<WebApi.Models.CategoryModel>> GetCategories();
+
+        [Get("/getcategory")]
+        Task<WebApi.Models.CategoryModel> GetCategory(int id);
 
         [Post("/addimage")]
         Task<HttpResponseMessage> AddImage([FromBody] ImageModel imageModel);
