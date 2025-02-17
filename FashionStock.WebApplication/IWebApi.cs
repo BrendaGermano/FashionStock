@@ -29,12 +29,12 @@ namespace FashionStock.WebApplication
         [Get("/getrecordtypes")]
         Task<List<RecordTypeModel>> GetRecordTypes();
 
-        //[Post("/addstockrecord")]
-        //Task<HttpResponseMessage> AddStockRecord([FromBody] StockRecordModel model);
+        [Get("/getcategories")]
+        Task<List<WebApi.Models.CategoryModel>> GetCategories();
 
-        //[Post("/addrecord")]
-        //Task<HttpResponseMessage> AddRecord([FromBody] WebApi.Models.StockRecordModel recordModel);
-      
+        [Get("/getcategory")]
+        Task<WebApi.Models.CategoryModel> GetCategory(int id);
+
         [Post("/addimage")]
         Task<HttpResponseMessage> AddImage([FromBody] ImageModel imageModel);
         [Get("/getimages")]

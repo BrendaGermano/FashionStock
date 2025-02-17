@@ -100,6 +100,7 @@ namespace FashionStock.WebApi.Controllers
             else
                 return Ok(productTable);
         }
+
         [HttpPut("/updateproduct")]
         public async Task<IActionResult> UpdateProduct(ProductModel productmodel)
         {

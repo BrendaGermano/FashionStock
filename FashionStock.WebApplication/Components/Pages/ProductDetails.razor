@@ -4,6 +4,7 @@
 @inject IWebApi WebApi
 @inject NavigationManager NavigationManager
 
+
 <MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 60vh">
     <MudItem xs="12" sm="5">
         <MudPaper Class="pa-4 mt-3" Style="background-color: #E3F2FD;">
@@ -20,7 +21,7 @@
                 <MudText Typo="Typo.body2" Color="Color.Primary">Quantity</MudText>
                 <MudText Class="mb-3">@productModel.Quantity</MudText>
                 <MudText Typo="Typo.body2" Color="Color.Primary">Category</MudText>
-                <MudText Class="mb-3">@productModel.CategoryId</MudText>
+                <MudText Class="mb-3">@categoryModel.Name</MudText>
   
         </MudPaper>
         <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
@@ -143,18 +144,23 @@
 
     private List<ImageModel> Images { get; set; } = new();
 
+    private CategoryModel categoryModel { get; set; } = new();
+
     protected override async Task OnParametersSetAsync()
     {
         Images = await WebApi.GetImages();
         productModel = await WebApi.GetProduct(Id);
         StateHasChanged();
+        categoryModel = await WebApi.GetCategory(productModel.CategoryId);
     }
+
 
     private void OpenForm()
     {
         IsFormOpen = !IsFormOpen;
     }
 
+   
     private async void SaveImage()
     {
         imageModel.ProductId = productModel.Id;

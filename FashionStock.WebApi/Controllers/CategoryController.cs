@@ -22,6 +22,16 @@ namespace FashionStock.WebApi.Controllers
             _businessContext = businessContext;
         }
 
+        [HttpGet("/getcategory")]
+        public async Task<IActionResult> GetCategory(int id)
+        {
+            var categories = await _businessContext.Categories.FirstOrDefaultAsync(p => p.IsDeleted == false && p.Id.Equals(id));
+            if (categories is null)
+                return NotFound();
+            else
+                return Ok(categories);
+        }
+
 
         [HttpGet("/getcategories")]
         public async Task<IActionResult> GetCategories()

@@ -16,14 +16,27 @@
             <EditForm FormName="AddStockRecordForm" Model="stockRecordModel">
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudTextField Label="Produto" @bind-Value="stockRecordModel.ProductId" Required="true" />
+                        <label for="ProductSelect">Select a product:</label>
+                        <select id="ProductSelect" class="form-control mr-1" @bind="@stockRecordModel.ProductId">
+                            <option value="">Select a Product</option>
+                            @foreach (var product in _products)
+                            {
+                                <option value="@product.Id">@product.Name</option>
+                            }
+                        </select>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <label for="RecordTypeSelect">Select a record type:</label>
+                        <select id="RecordTypeSelect" class="form-control mr-1" @bind="@stockRecordModel.RecordTypeId">
+                            <option value="">Select a Record Type</option>
+                            @foreach (var type in _types)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
                     </MudItem>
                     <MudItem xs="12">
                         <MudTextField Label="Usuário" @bind-Value="stockRecordModel.UserId" Required="true" />
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField Label="Tipo de Registro" @bind-Value="stockRecordModel.RecordTypeId" Required="true" Type="number" />
-
                     </MudItem>
                     <MudItem xs="6">
                         <MudTextField Label="Quantidade" @bind-Value="stockRecordModel.Quantity" Required="true" Type="number" />
@@ -41,13 +54,23 @@
 
 
 @code {
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _products = await WebApi.GetProducts();
+        _types = await WebApi.GetRecordTypes();
+    }
+
     private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
+
+    private List<ProductModel> _products { get; set; } = new();
+
+    private List<RecordTypeModel> _types { get; set; } = new();
 
     private async Task AddNewRecord()
     {
         var result = await WebApi.SaveStockRecord(stockRecordModel);
     }
-
 
     private async Task SaveStockRecord()
     {
@@ -92,14 +115,11 @@
             throw;
         }
     }
+
     private void Cancel()
     {
         NavigationManager.NavigateTo("/stockrecords");
     }
 
-    // private async Task AddRecord()
-    // {
-    //     var result = await WebApi.AddRecord(stockRecordModel);
-    // }
 
 }
