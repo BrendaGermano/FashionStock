@@ -29,9 +29,6 @@ namespace FashionStock.WebApplication
         [Get("/getrecordtypes")]
         Task<List<RecordTypeModel>> GetRecordTypes();
 
-        [Get("/getcategories")]
-        Task<List<WebApi.Models.CategoryModel>> GetCategories();
-
         [Get("/getcategory")]
         Task<WebApi.Models.CategoryModel> GetCategory(int id);
 
@@ -41,8 +38,7 @@ namespace FashionStock.WebApplication
         Task<List<ImageModel>> GetImages();
         [Delete("/deleteimage")]
         Task<HttpResponseMessage> DeleteImage(long id);
-
-        [Get("/getproducts")]
+        [Get("/getcategories")]
         Task<List<CategoryModel>> GetCategories();
 
         [Post("/addcategories")]
