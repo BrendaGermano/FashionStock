@@ -1,0 +1,90 @@
+﻿@page "/addcategory"
+@using FashionStock.WebApi.Models
+@rendermode InteractiveServer
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+<h3>AddCategories</h3>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
+    <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
+        <MudCardHeader>
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Adicionar Registro de Estoque</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <EditForm FormName="AddCategory" Model="categoryModel">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField Label="Name" @bind-Value="categoryModel.Name" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField Label="Description" @bind-Value="categoryModel.Description" Required="true" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudCardActions Class="justify-end mt-4">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+                    <MudButton OnClick="AddCategory" Variant="Variant.Filled" Color="Color.Success" Class="ml-2">Save</MudButton>
+                </MudCardActions>
+            </EditForm>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+
+@code {
+    private CategoryModel categoryModel { get; set; } = new();
+
+    private async Task SaveCategory()
+    {
+        var result = await WebApi.AddCategory(categoryModel);
+    }
+
+
+    private async Task AddCategory()
+    {
+
+        var newCategory = new CategoryModel();
+        newCategory.Name = categoryModel.Name;
+        newCategory.Description = categoryModel.Description;
+        newCategory.CreatedAt = DateTime.Now;
+        newCategory.UpdatedAt = DateTime.Now;
+        newCategory.Id = 0;
+
+        try
+        {
+            var stringJson = new StringContent(
+               System.Text.Json.JsonSerializer.Serialize(newCategory),
+               System.Text.Encoding.UTF8,
+               "application/json"
+        );
+
+
+            HttpClientHandler handler = new HttpClientHandler();
+
+            using (var client = new HttpClient(handler, false))
+            {
+                var response = await client.PostAsync("https://localhost:7281/addcategories", stringJson);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/products");
+
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            throw;
+        }
+    }
+       private void Cancel()
+      {
+        NavigationManager.NavigateTo("/products");
+      }
+
+ }

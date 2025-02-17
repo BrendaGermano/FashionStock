@@ -41,5 +41,11 @@ namespace FashionStock.WebApplication
         Task<List<ImageModel>> GetImages();
         [Delete("/deleteimage")]
         Task<HttpResponseMessage> DeleteImage(long id);
+
+        [Get("/getproducts")]
+        Task<List<CategoryModel>> GetCategories();
+
+        [Post("/addcategories")]
+        Task<HttpResponseMessage> AddCategory([FromBody] CategoryModel categoryModel);
     }
 }

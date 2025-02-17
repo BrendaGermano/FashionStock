@@ -12,6 +12,7 @@ namespace FashionStock.Entities
         public string Description { get; set; }
         public float Price { get; set; }
         public long CategoryId { get; set; }
+        public Category Category { get; set; }
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
