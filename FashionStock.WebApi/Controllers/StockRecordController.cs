@@ -26,7 +26,7 @@ namespace FashionStock.WebApi.Controllers
         [HttpGet("/getstockrecords")]
         public async Task<IActionResult> GetStockRecords()
         {
-            var stockRecords = await _businessContext.StockRecords.Include(sr => sr.Product).Include(sr => sr.RecordType).ToListAsync();
+            var stockRecords = await _businessContext.StockRecords.Include(sr => sr.Product).Include(sr => sr.RecordType).Where(sr => sr.IsDeleted == false).ToListAsync();
 
             if (!stockRecords.Any())
                 return NotFound();

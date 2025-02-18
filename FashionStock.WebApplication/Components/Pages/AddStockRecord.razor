@@ -79,16 +79,9 @@
 
     private async Task UpdateProductQuantity(ProductModel productModel)
     {
-        if (stockRecordModel.RecordTypeId.Equals(3))
-        {
-            productModel.Quantity -= stockRecordModel.Quantity;
-            await WebApi.UpdateProduct(productModel);
-        }
-        else
-        {
-            productModel.Quantity += stockRecordModel.Quantity;
-            await WebApi.UpdateProduct(productModel);
-        }
+        productModel.AddOrSubtractQuantity((int)stockRecordModel.RecordTypeId, stockRecordModel);
+        await WebApi.UpdateProduct(productModel);
+
     }
 
     private async Task SaveStockRecord()

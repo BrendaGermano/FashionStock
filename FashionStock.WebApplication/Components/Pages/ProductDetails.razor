@@ -134,7 +134,6 @@
 
     private bool IsFormOpen { get; set; } = false;
 
-
     [Parameter]
     public int Id { get; set; }
 
@@ -144,12 +143,15 @@
 
     private List<ImageModel> Images { get; set; } = new();
 
+    private List<StockRecordModel> _records { get; set; } = new();
+
     private CategoryModel categoryModel { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()
     {
         Images = await WebApi.GetImages();
         productModel = await WebApi.GetProduct(Id);
+        _records = await WebApi.GetStockRecords();
         StateHasChanged();
         categoryModel = await WebApi.GetCategory(productModel.CategoryId);
     }
@@ -160,7 +162,7 @@
         IsFormOpen = !IsFormOpen;
     }
 
-   
+
     private async void SaveImage()
     {
         imageModel.ProductId = productModel.Id;
