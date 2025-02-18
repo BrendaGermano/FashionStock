@@ -59,9 +59,12 @@
     {
         _products = await WebApi.GetProducts();
         _types = await WebApi.GetRecordTypes();
+
     }
 
     private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
+
+    private ProductModel productModel { get; set; } = new();
 
     private List<ProductModel> _products { get; set; } = new();
 
@@ -69,7 +72,23 @@
 
     private async Task AddNewRecord()
     {
+        productModel = await WebApi.GetProduct((int)stockRecordModel.ProductId);
+        UpdateProductQuantity(productModel);
         var result = await WebApi.SaveStockRecord(stockRecordModel);
+    }
+
+    private async Task UpdateProductQuantity(ProductModel productModel)
+    {
+        if (stockRecordModel.RecordTypeId.Equals(3))
+        {
+            productModel.Quantity -= stockRecordModel.Quantity;
+            await WebApi.UpdateProduct(productModel);
+        }
+        else
+        {
+            productModel.Quantity += stockRecordModel.Quantity;
+            await WebApi.UpdateProduct(productModel);
+        }
     }
 
     private async Task SaveStockRecord()
