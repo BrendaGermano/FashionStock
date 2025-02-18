@@ -76,7 +76,7 @@ namespace FashionStock.WebApi.Controllers
                 return Ok(recordTypeTable);
         }
 
-        [HttpDelete("/deleteRecord")]
+        [HttpDelete("/deleterecord")]
         public async Task<IActionResult> DeleteRecord(long id)
         {
             var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.Id.Equals(id));
@@ -93,7 +93,7 @@ namespace FashionStock.WebApi.Controllers
             return BadRequest();
         }
 
-        [HttpPut("/updateRecord")]
+        [HttpPut("/updaterecord")]
         public async Task<IActionResult> UpdateRecord(StockRecordModel recordModel)
         {
             var record = await _businessContext.StockRecords.FirstOrDefaultAsync(p => p.Id.Equals(recordModel.Id));
