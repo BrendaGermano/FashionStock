@@ -43,5 +43,14 @@ namespace FashionStock.WebApplication
 
         [Post("/addcategories")]
         Task<HttpResponseMessage> AddCategory([FromBody] CategoryModel categoryModel);
+
+        [Get("/getlowstock")]
+        Task<List<ProductDto>> GetLowStock([Query] int threshold = 5);
+
+        [Get("/gettopsellingproducts")]
+        Task<List<ProductDto>> GetTopSellingProducts([Query] int top = 5);
+
+        [Get("/gettopsellingcategories")]
+        Task<List<CategoryDto>> GetTopSellingCategories();
     }
 }
