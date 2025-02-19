@@ -23,10 +23,20 @@ namespace FashionStock.WebApi.Controllers
             _businessContext = businessContext;
         }
 
+        [HttpGet("/getstockrecord")]
+        public async Task<IActionResult> GetRecord(int id)
+        {
+            var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.IsDeleted == false && r.Id.Equals(id));
+            if (record is null)
+                return NotFound();
+            else
+                return Ok(record);
+        }
+
         [HttpGet("/getstockrecords")]
         public async Task<IActionResult> GetStockRecords()
         {
-            var stockRecords = await _businessContext.StockRecords.Include(sr => sr.Product).Include(sr => sr.RecordType).ToListAsync();
+            var stockRecords = await _businessContext.StockRecords.Include(sr => sr.Product).Include(sr => sr.RecordType).Where(sr => sr.IsDeleted == false).ToListAsync();
 
             if (!stockRecords.Any())
                 return NotFound();
@@ -75,65 +85,55 @@ namespace FashionStock.WebApi.Controllers
 
                 return Ok(recordTypeTable);
         }
-        //[HttpGet("/getproductname")]
-        //public async Task<IActionResult> GetProductName([FromBody] StockRecordModel model)
-        //{
-        //    var 
-        //}
-        //[HttpPost("/addstockrecord")]
-        //public async Task<IActionResult> AddStockRecord([FromBody] StockRecordModel model)
-        //{
-        //    if (model == null)
-        //        return BadRequest("Dados inválidos");
 
-        //    var product = await _businessContext.Products.FindAsync(model.ProductId);
-        //    if (product == null)
-        //        return NotFound("Produto não encontrado");
+        [HttpDelete("/deleterecord")]
+        public async Task<IActionResult> DeleteRecord(long id)
+        {
+            var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.Id.Equals(id));
 
-        //    var stockRecord = new StockRecord
-        //    {
-        //        ProductId = model.ProductId,
-        //        UserId = model.UserId,
-        //        RecordTypeId = model.RecordTypeId,
-        //        Quantity = model.Quantity,
-        //        CreatedAt = DateTime.UtcNow,
-        //        UpdatedAt = DateTime.UtcNow
-        //    };
+            if (record is null)
+                return BadRequest();
 
-        //    _businessContext.StockRecords.Add(stockRecord);
+            record.IsDeleted = true;
 
-        //    await _businessContext.SaveChangesAsync();
+            var result = await _businessContext.SaveChangesAsync();
+            if (result.Equals(1))
+                return Ok();
 
-        //    return Ok(stockRecord);
-        //}
+            return BadRequest();
+        }
 
-        //[HttpPost("/addrecord")]
-        //public async Task<IActionResult> AddRecord(StockRecordModel recordModel)
-        //{
-        //    var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.Id.Equals(recordModel.Id));
+        [HttpPut("/updaterecord")]
+        public async Task<IActionResult> UpdateRecord(StockRecordModel recordModel)
+        {
+            var record = await _businessContext.StockRecords.FirstOrDefaultAsync(p => p.Id.Equals(recordModel.Id));
 
-        //    if (record is not null)
-        //        return BadRequest();
+            if (record is null)
+
+                return BadRequest();
+
+            record.ProductId = recordModel.ProductId;
+            record.UserId = recordModel.UserId;
+            record.RecordTypeId = recordModel.RecordTypeId;
+            record.Quantity = recordModel.Quantity;
+            record.UpdatedAt = DateTime.Now;
 
 
-        //    var newRecord = new StockRecord();
-        //    newRecord.ProductId = recordModel.ProductId;
-        //    newRecord.UserId = recordModel.UserId;
-        //    newRecord.RecordTypeId = recordModel.RecordTypeId;
-        //    newRecord.Quantity = recordModel.Quantity;
-        //    newRecord.CreatedAt = DateTime.UtcNow;
-        //    newRecord.UpdatedAt = DateTime.UtcNow;
+            try
+            {
+                var result = await _businessContext.SaveChangesAsync();
+                if (result.Equals(1))
+                    return Ok();
 
-        //    _businessContext.StockRecords.Add(newRecord);
+            }
+            catch (Exception)
+            {
 
-        //    var result = await _businessContext.SaveChangesAsync();
+                throw;
+            }
 
-        //    if (result.Equals(1))
-        //        return Ok();
-
-        //    return BadRequest();
-        //}
-
+            return BadRequest();
+        }
 
     }
 }

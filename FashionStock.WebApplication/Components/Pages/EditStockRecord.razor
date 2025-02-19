@@ -1,0 +1,84 @@
+﻿@page "/stockrecords/edit/{id:int}"
+@rendermode InteractiveServer
+@using FashionStock.WebApi.Models
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <EditForm Model="@stockRecordModel" OnValidSubmit="() => UpdateStockRecord(stockRecordModel, productModel)">
+        <MudGrid Justify="Justify.Center" Style="height: 100vh;">
+            <MudItem xs="12" sm="7">
+                <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Editar Registo de Stock</MudText>
+                    </MudCardHeader>
+                    <MudItem xs="12" Style="margin:2%">
+                        <label for="ProductSelect">Select a product:</label>
+                        <select id="ProductSelect" class="form-control mr-1" @bind="@stockRecordModel.ProductId">
+                            <option value="">Select a product</option>
+                            @foreach (var product in _products)
+                            {
+                                <option value="@product.Id">@product.Name</option>
+                            }
+                        </select>
+                    </MudItem>
+                    <MudItem xs="12" Style="margin:2%">
+                        <label for="ProductSelect">Select a record type:</label>
+                        <select id="ProductSelect" class="form-control mr-1" @bind="@stockRecordModel.RecordTypeId">
+                            <option value="">Select a record type</option>
+                            @foreach (var type in _types)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
+                    </MudItem>
+                    <MudItem xs="12" Style="margin:2%">
+                        <MudTextField Label="User" @bind-Value="stockRecordModel.UserId" Required="true" />
+                    </MudItem>
+                    <MudItem xs="6" Style="margin:2%">
+                        <MudTextField Label="Quantity" @bind-Value="stockRecordModel.Quantity" Required="true" Type="number" />
+                    </MudItem>
+                    <MudCardActions Class="justify-end">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="GoBack">Cancel</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Class="ml-2" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Save Record</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</MudContainer>
+
+@code {
+
+    protected override async Task OnParametersSetAsync()
+    {
+        stockRecordModel = await WebApi.GetRecord(Id);
+        _products = await WebApi.GetProducts();
+        _types = await WebApi.GetRecordTypes();
+        productModel = await WebApi.GetProduct((int)stockRecordModel.ProductId);
+
+    }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private StockRecordModel stockRecordModel { get; set; } = new();
+
+    private ProductModel productModel { get; set; } = new();
+
+    private List<ProductModel> _products { get; set; } = new();
+
+    private List<RecordTypeModel> _types { get; set; } = new();
+
+    private async Task UpdateStockRecord(StockRecordModel stockRecordModel,ProductModel productModel)
+    {
+        var result = await WebApi.UpdateRecord(stockRecordModel);
+        NavigationManager.NavigateTo("/stockrecords");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/stockrecords", true);
+    }
+
+}

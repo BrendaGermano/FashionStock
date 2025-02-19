@@ -19,9 +19,12 @@ namespace FashionStock.WebApplication
         Task<WebApi.Models.ProductModel> GetProduct(int id);
         [Put("/updateproduct")]
         Task<HttpResponseMessage> UpdateProduct([FromBody] WebApi.Models.ProductModel productModel);
-      
+
         [Get("/getstockrecords")]
         Task<List<StockRecordModel>> GetStockRecords();
+
+        [Get("/getstockrecord")]
+        Task<StockRecordModel> GetRecord(int id);
 
         [Post("/savestockrecord")]
         Task<HttpResponseMessage> SaveStockRecord([FromBody] StockRecordModel model);
@@ -40,7 +43,10 @@ namespace FashionStock.WebApplication
         Task<HttpResponseMessage> DeleteImage(long id);
         [Get("/getcategories")]
         Task<List<CategoryModel>> GetCategories();
-
+        [Put("/updaterecord")]
+        Task<HttpResponseMessage> UpdateRecord([FromBody] WebApi.Models.StockRecordModel recordModel);
+        [Delete("/deleterecord")]
+        Task<HttpResponseMessage> DeleteRecord(long id);
         [Post("/addcategories")]
         Task<HttpResponseMessage> AddCategory([FromBody] CategoryModel categoryModel);
 

@@ -31,11 +31,11 @@
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.CreatedAt.ToString("g")</MudText></MudTd>
                     <MudTd>
-                        <MudButton  Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit"
+                        <MudButton OnClick="() => NavigationEditStock(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit"
                                    Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white; width: 90px;">Edit</MudButton>
                     </MudTd>
                     <MudTd>
-                        <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete"
+                        <MudButton OnClick="() => Delete(context.Id,context.ProductId,_stockRecords)" Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete"
                                    Style="border-color: #FF9800; color: #FF9800; margin-left: 8px;">Delete</MudButton>
                     </MudTd>
                 </RowTemplate>
@@ -81,6 +81,11 @@
         NavigationManager.NavigateTo($"addstockrecords", true);
     }
 
+    private void NavigationEditStock(int id)
+    {
+        NavigationManager.NavigateTo($"/stockrecords/edit/{id}", true);
+    }
+
     private async Task LoadStockRecords()
     {
         IsLoading = true;
@@ -119,6 +124,24 @@
 
 
     }
+
+    private async void Delete(long id, long productId, List<StockRecordModel> stockRecords)
+    {
+        var record = _stockRecords.FirstOrDefault(r => r.Id == id);
+        var response = await WebApi.DeleteRecord(id);
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        product.UndoAddOrSubtractQuantity((int)record.RecordTypeId, record.Quantity);
+        await WebApi.UpdateProduct(product);
+        NavigationManager.NavigateTo("/stockrecords", true);
+    }
+    // private async void DeleteRecord(long id, long productId, List<StockRecordModel> stockRecords)
+    // {
+    //     var response = await WebApi.DeleteRecord(id);
+    //     var product = _products.FirstOrDefault(p => p.Id == productId);
+    //     product.CalculateQuantity(stockRecords);
+    //     await WebApi.UpdateProduct(product);
+    //     NavigationManager.NavigateTo("/stockrecords", true);
+    // }
 
     private bool FilterFunc(StockRecordModel record)
     {
