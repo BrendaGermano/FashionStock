@@ -31,7 +31,7 @@
                     <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
                     <MudTd><MudText Typo="Typo.body1">@context.CreatedAt.ToString("g")</MudText></MudTd>
                     <MudTd>
-                        <MudButton  Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit"
+                        <MudButton OnClick="() => NavigationEditStock(context.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit"
                                    Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white; width: 90px;">Edit</MudButton>
                     </MudTd>
                     <MudTd>
@@ -79,6 +79,11 @@
     private void NavigationAddStock()
     {
         NavigationManager.NavigateTo($"addstockrecords", true);
+    }
+
+    private void NavigationEditStock(int id)
+    {
+        NavigationManager.NavigateTo($"/stockrecords/edit/{id}", true);
     }
 
     private async Task LoadStockRecords()

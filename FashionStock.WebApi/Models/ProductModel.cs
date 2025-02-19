@@ -28,54 +28,32 @@ namespace FashionStock.WebApi.Models
 
         public void AddOrSubtractQuantity(int recordType, StockRecordModel stockRecordModel)
         {
-            if (recordType.Equals(3))
-            {
-                Quantity -= stockRecordModel.Quantity;
-            }
-            else if (recordType.Equals(2))
+           
+            if (recordType == 2)
             {
                 Quantity += stockRecordModel.Quantity;
+            }
+            
+            else if (recordType == 3)
+            {
+                Quantity -= stockRecordModel.Quantity;
             }
         }
 
         public void UndoAddOrSubtractQuantity(int recordType, int quantity)
         {
-
-            if (recordType == 3)
-            {
-                Quantity += quantity;
-            }
-            else if (recordType == 2)
+            
+            if (recordType == 2)
             {
                 Quantity -= quantity;
             }
+            
+            else if (recordType == 3)
+            {
+                Quantity += quantity;
+            }
         }
 
-        //public void CalculateQuantity(List<StockRecordModel> stockRecords)
-        //{
-        //    if (stockRecords == null)
-        //    {
-        //        Quantity = 0;
-        //        return;
-        //    }
-
-        //    int totalQuantity = 0;
-        //    foreach (var stockRecord in stockRecords)
-        //    {
-        //        if (stockRecord.ProductId == Id)
-        //        {
-        //            if (stockRecord.RecordTypeId == 2)
-        //            {
-        //                totalQuantity += stockRecord.Quantity;
-        //            }
-        //            else if (stockRecord.RecordTypeId == 3)
-        //            {
-        //                totalQuantity -= stockRecord.Quantity;
-        //            }
-        //        }
-        //    }
-        //    Quantity = totalQuantity;
-        //}
 
     }
 }

@@ -23,6 +23,16 @@ namespace FashionStock.WebApi.Controllers
             _businessContext = businessContext;
         }
 
+        [HttpGet("/getstockrecord")]
+        public async Task<IActionResult> GetRecord(int id)
+        {
+            var record = await _businessContext.StockRecords.FirstOrDefaultAsync(r => r.IsDeleted == false && r.Id.Equals(id));
+            if (record is null)
+                return NotFound();
+            else
+                return Ok(record);
+        }
+
         [HttpGet("/getstockrecords")]
         public async Task<IActionResult> GetStockRecords()
         {
@@ -106,7 +116,6 @@ namespace FashionStock.WebApi.Controllers
             record.UserId = recordModel.UserId;
             record.RecordTypeId = recordModel.RecordTypeId;
             record.Quantity = recordModel.Quantity;
-            record.CreatedAt = DateTime.Now;
             record.UpdatedAt = DateTime.Now;
 
 

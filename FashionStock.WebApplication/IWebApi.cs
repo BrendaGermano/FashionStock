@@ -23,6 +23,9 @@ namespace FashionStock.WebApplication
         [Get("/getstockrecords")]
         Task<List<StockRecordModel>> GetStockRecords();
 
+        [Get("/getstockrecord")]
+        Task<StockRecordModel> GetRecord(int id);
+
         [Post("/savestockrecord")]
         Task<HttpResponseMessage> SaveStockRecord([FromBody] StockRecordModel model);
 
