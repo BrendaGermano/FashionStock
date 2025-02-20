@@ -25,9 +25,9 @@
                     <MudItem xs="6">
                         <MudTextField Label="Price" @bind-Value="@productModel.Price" Required="true" Type="number" />
                     </MudItem>
-                    <MudItem xs="6">
+                    @* <MudItem xs="6">
                         <MudTextField Label="Quantity" @bind-Value="@productModel.Quantity" Required="true" Type="number" />
-                    </MudItem>
+                    </MudItem> *@
                     <MudItem xs="12">
 
                         <label for="CategorySelect">Select an Option:</label>
@@ -70,7 +70,7 @@
         newproduct.Description = productModel.Description;
         newproduct.Price = productModel.Price;
         newproduct.CategoryId = productModel.CategoryId;
-        newproduct.Quantity = productModel.Quantity;
+        // newproduct.Quantity = productModel.Quantity;
         newproduct.CreatedAt = DateTime.Now;
         newproduct.UpdatedAt = DateTime.Now;
         newproduct.Id = 0;
