@@ -52,5 +52,10 @@ namespace FashionStock.WebApplication
 
         [Get("/gettopsellingcategories")]
         Task<List<CategoryDto>> GetTopSellingCategories();
+
+        [Get("/gettotalstockvalue")]
+        Task<TotalStockValueDto> GetTotalStockValue();
+
+
     }
 }

@@ -72,5 +72,22 @@ namespace FashionStock.WebApi.Controllers
 
             return Ok(categories);
         }
+        [HttpGet("/gettotalstockvalue")]
+        public async Task<IActionResult> GetTotalStockValue()
+        {
+            var totalValue = await _businessContext.StockRecords
+                .Include(r => r.Product)
+                .GroupBy(r => r.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    TotalValue = g.Sum(r => r.Quantity * g.First().Product.Price)
+                })
+                .SumAsync(v => v.TotalValue);
+
+            return Ok(new { TotalValue = totalValue });  
+        }
+    
+
     }
 }
