@@ -10,23 +10,32 @@ namespace FashionStock.WebApi.Models
         public string Description { get; set; }
         public float Price { get; set; }
         public int CategoryId { get; set; }
-
-        private int _quantity;
-        public int Quantity
-        {
-            get { return _quantity; }
-
-            set
-            {
-                _quantity = Math.Max(0, value);
-            }
-
-        }
+        public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public void CalculateFinalQuantity(List<StockRecordModel> stockRecords)
+        {
 
-        public void AddOrSubtractQuantity(int recordType, StockRecordModel stockRecordModel)
+            Quantity = 0;
+
+            foreach (var record in stockRecords)
+            {
+
+                if (record.ProductId == Id && record.IsDeleted == false)
+                {
+
+                    AddOrSubtractQuantity(record.RecordTypeId, record);
+                }
+            }
+
+            if (Quantity < 0)
+            {
+                Quantity = 0;
+            }
+        }
+
+        public void AddOrSubtractQuantity(long recordType, StockRecordModel stockRecordModel)
         {
            
             if (recordType == 2)
@@ -40,7 +49,7 @@ namespace FashionStock.WebApi.Models
             }
         }
 
-        public void UndoAddOrSubtractQuantity(int recordType, int quantity)
+        public void UndoAddOrSubtractQuantity(long recordType, int quantity)
         {
             
             if (recordType == 2)

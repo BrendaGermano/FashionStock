@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
-    <EditForm Model="@stockRecordModel" OnValidSubmit="() => UpdateStockRecord(stockRecordModel, productModel)">
+    <EditForm Model="@stockRecordModel" OnValidSubmit="() => UpdateStockRecord(stockRecordModel, productModel, _records)">
         <MudGrid Justify="Justify.Center" Style="height: 100vh;">
             <MudItem xs="12" sm="7">
                 <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
@@ -56,6 +56,7 @@
         _products = await WebApi.GetProducts();
         _types = await WebApi.GetRecordTypes();
         productModel = await WebApi.GetProduct((int)stockRecordModel.ProductId);
+        _records = await WebApi.GetStockRecords();
 
     }
 
@@ -70,10 +71,21 @@
 
     private List<RecordTypeModel> _types { get; set; } = new();
 
-    private async Task UpdateStockRecord(StockRecordModel stockRecordModel,ProductModel productModel)
+    private List<StockRecordModel> _records { get; set; } = new();
+
+
+    private async Task UpdateStockRecord(StockRecordModel stockRecordModel, ProductModel productModel, List<StockRecordModel> _records)
     {
         var result = await WebApi.UpdateRecord(stockRecordModel);
+        _records = await WebApi.GetStockRecords();
+        CalculateNewQuantity(productModel, _records);
         NavigationManager.NavigateTo("/stockrecords");
+    }
+
+    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
+    {
+        productModel.CalculateFinalQuantity(_records);
+        await WebApi.UpdateProduct(productModel);
     }
 
     private void GoBack()

@@ -3,7 +3,7 @@
 namespace FashionStock.WebApi.Models
 {
 
-    public class StockRecordModel 
+    public class StockRecordModel
     {
         public int Id { get; set; }
         public long ProductId { get; set; }
@@ -12,5 +12,6 @@ namespace FashionStock.WebApi.Models
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

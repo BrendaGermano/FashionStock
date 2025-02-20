@@ -45,7 +45,7 @@
 
                 <MudCardActions Class="justify-end mt-4">
                     <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
-                    <MudButton OnClick="AddNewRecord" Variant="Variant.Filled" Color="Color.Success" Class="ml-2">Save</MudButton>
+                    <MudButton OnClick="() => AddRecord(_records)" Variant="Variant.Filled" Color="Color.Success" Class="ml-2">Save</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>
@@ -59,6 +59,7 @@
     {
         _products = await WebApi.GetProducts();
         _types = await WebApi.GetRecordTypes();
+        _records = await WebApi.GetStockRecords();
 
     }
 
@@ -70,19 +71,23 @@
 
     private List<RecordTypeModel> _types { get; set; } = new();
 
-    private async Task AddNewRecord()
+    private List<StockRecordModel> _records { get; set; } = new();
+
+    
+    private async Task AddRecord(List<StockRecordModel> _records)
     {
         productModel = await WebApi.GetProduct((int)stockRecordModel.ProductId);
-        UpdateProductQuantity(productModel);
         var result = await WebApi.SaveStockRecord(stockRecordModel);
+        _records = await WebApi.GetStockRecords();
+        CalculateNewQuantity(productModel, _records);
     }
 
-    private async Task UpdateProductQuantity(ProductModel productModel)
+    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel>_records)
     {
-        productModel.AddOrSubtractQuantity((int)stockRecordModel.RecordTypeId, stockRecordModel);
+        productModel.CalculateFinalQuantity(_records);
         await WebApi.UpdateProduct(productModel);
-
     }
+
 
     private async Task SaveStockRecord()
     {
