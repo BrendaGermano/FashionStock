@@ -39,7 +39,7 @@ namespace FashionStock.WebApi.Controllers
             var products = await _businessContext.StockRecords
                 .Include(r => r.RecordType)
                 .Include(r => r.Product)
-                .Where(r => r.RecordType.Name.ToLower() == "saida")
+                .Where(r => r.RecordTypeId == 3)
                 .GroupBy(r => r.ProductId)
                 .Select(g => new ProductDto
                 {
@@ -59,7 +59,7 @@ namespace FashionStock.WebApi.Controllers
         public async Task<IActionResult> GetTopSellingCategories()
         {
             var categories = await _businessContext.StockRecords
-                .Where(r => r.RecordType.Name.ToLower() == "Saida")  
+                .Where(r => r.RecordTypeId == 3)  
                 .GroupBy(r => r.Product.CategoryId)
                 .Select(g => new CategoryDto
                 {
