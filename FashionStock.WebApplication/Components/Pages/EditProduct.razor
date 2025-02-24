@@ -23,6 +23,14 @@
                         </MudCardContent>
                     <MudItem xs="12">
 
+                        @* <MudSelect @bind-Value="productModel.CategoryId" Label="Select a Category" Style="width:9cm; margin:auto">
+                            @foreach (var category in _categories)
+                            {
+                                <MudSelectItem Value="@((int)category.Id)">@category.Name</MudSelectItem>
+                            }
+                        </MudSelect> *@
+
+
                         <label class="ml-4" for="CategorySelect">Select an Option:</label>
                         <select id="CategorySelect" class="form-control" @bind="@productModel.CategoryId" style="width:13cm; margin:auto">
                             <option value="">Select a Category</option>

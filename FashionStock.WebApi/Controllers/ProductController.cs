@@ -115,7 +115,6 @@ namespace FashionStock.WebApi.Controllers
             product.Price = productmodel.Price;
             product.CategoryId = productmodel.CategoryId;
             product.Quantity = productmodel.Quantity;
-            product.CreatedAt = DateTime.Now;
             product.UpdatedAt = DateTime.Now;
 
 
