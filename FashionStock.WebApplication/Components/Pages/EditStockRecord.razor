@@ -10,7 +10,7 @@
             <MudItem xs="12" sm="7">
                 <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
                     <MudCardHeader>
-                        <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Editar Registo de Stock</MudText>
+                        <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Edit Stock Record</MudText>
                     </MudCardHeader>
                     <MudItem xs="12" Style="margin:2%">
                         <label for="ProductSelect">Select a product:</label>
@@ -79,7 +79,7 @@
         var result = await WebApi.UpdateRecord(stockRecordModel);
         _records = await WebApi.GetStockRecords();
         CalculateNewQuantity(productModel, _records);
-        NavigationManager.NavigateTo("/stockrecords");
+        NavigationManager.NavigateTo("/");
     }
 
     private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
@@ -90,7 +90,7 @@
 
     private void GoBack()
     {
-        NavigationManager.NavigateTo("/stockrecords", true);
+        NavigationManager.NavigateTo("/", true);
     }
 
 }

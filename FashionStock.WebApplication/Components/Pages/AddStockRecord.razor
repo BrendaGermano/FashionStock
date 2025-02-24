@@ -9,7 +9,7 @@
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
     <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
         <MudCardHeader>
-            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Adicionar Registro de Estoque</MudText>
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Add Stock Record</MudText>
         </MudCardHeader>
 
         <MudCardContent>
@@ -119,7 +119,7 @@
 
                 if (response.IsSuccessStatusCode)
                 {
-                    NavigationManager.NavigateTo("/stockrecords");
+                    NavigationManager.NavigateTo("/");
 
                 }
             }
@@ -135,7 +135,7 @@
 
     private void Cancel()
     {
-        NavigationManager.NavigateTo("/stockrecords");
+        NavigationManager.NavigateTo("/");
     }
 
 

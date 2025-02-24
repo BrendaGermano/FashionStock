@@ -4,12 +4,12 @@
 @inject IWebApi WebApi
 @inject NavigationManager NavigationManager
 
-<h3>AddCategories</h3>
+
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
     <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
         <MudCardHeader>
-            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Adicionar Registro de Estoque</MudText>
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Add New Category</MudText>
         </MudCardHeader>
 
         <MudCardContent>
@@ -69,7 +69,7 @@
 
                 if (response.IsSuccessStatusCode)
                 {
-                    NavigationManager.NavigateTo("/products");
+                    NavigationManager.NavigateTo("/");
 
                 }
             }
@@ -84,7 +84,7 @@
     }
        private void Cancel()
       {
-        NavigationManager.NavigateTo("/products");
+        NavigationManager.NavigateTo("/");
       }
 
  }
