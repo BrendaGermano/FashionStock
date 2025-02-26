@@ -6,44 +6,42 @@
 @inject HttpClient Http
 
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
-    <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
-        <MudCardHeader>
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 d-flex justify-center" Style="background-color: #E3F2FD; padding: 20px; border-radius: 12px;">
+    <MudCard Class="elevation-4" Style="background-color: #BBDEFB; border-radius: 12px; width: 90vw; max-width: 1200px; padding: 16px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+        <MudCardHeader Class="border-bottom" Style="border-bottom: 2px solid #64B5F6; background-color: #BBDEFB; padding: 12px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
             <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Add New Product</MudText>
         </MudCardHeader>
 
         <MudCardContent>
             <EditForm FormName="AddProductForm" Model="@productModel" OnValidSubmit="SaveProduct">
-                <DataAnnotationsValidator/>
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudTextField Label="Product Name" @bind-Value="@productModel.Name" Required="true" />
+                <DataAnnotationsValidator />
+                <MudGrid Class="justify-center" Style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Product Name" @bind-Value="@productModel.Name" Required="true" FullWidth Style="background-color: white; border-radius: 8px; border: 1px solid #64B5F6; padding: 6px; min-width: 300px; max-width: 100%;" />
                     </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField Label="Description" @bind-Value="@productModel.Description" Required="true" />
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Price" @bind-Value="@productModel.Price" Required="true" Type="number" FullWidth Style="background-color: white; border-radius: 8px; border: 1px solid #64B5F6; padding: 6px; min-width: 300px; max-width: 100%;" />
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField Label="Price" @bind-Value="@productModel.Price" Required="true" Type="number" />
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Description" @bind-Value="@productModel.Description" Required="true" FullWidth Style="background-color: white; border-radius: 8px; border: 1px solid #64B5F6; padding: 6px; min-width: 300px; max-width: 100%;" />
                     </MudItem>
-                    @* <MudItem xs="6">
-                        <MudTextField Label="Quantity" @bind-Value="@productModel.Quantity" Required="true" Type="number" />
+                    @* <MudItem xs="12" md="6">
+                    <MudTextField Label="Quantity" @bind-Value="@productModel.Quantity" Required="true" Type="number" />
                     </MudItem> *@
-                    <MudItem xs="12">
-
-                        <label for="CategorySelect">Select an Option:</label>
-                        <select id="CategorySelect" class="form-control" @bind="@productModel.CategoryId">
+                    <MudItem xs="12" md="6">
+                        <label for="CategorySelect" class="text-primary">Select a Category:</label>
+                        <select id="CategorySelect" class="form-control" @bind="@productModel.CategoryId" Style="background-color: white; border: 1px solid #64B5F6; border-radius: 8px; width: 100%; padding: 6px; min-width: 300px; max-width: 100%;">
                             <option value="">Select a Category</option>
                             @foreach (var category in _categories)
                             {
                                 <option value="@category.Id">@category.Name</option>
                             }
                         </select>
-
                     </MudItem>
                 </MudGrid>
-                <MudCardActions Class="justify-end mt-4">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="GoBack">Cancel</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" @onclick="SaveProduct">Save</MudButton>
+                <MudCardActions Class="justify-end mt-3" Style="padding: 12px; border-top: 2px solid #64B5F6; background-color: #BBDEFB; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="GoBack" Style="border-color: #64B5F6; color: #1565C0; border-radius: 8px; padding: 6px 14px;">Cancel</MudButton>
+                    <MudButton @onclick="SaveProduct" Variant=" Variant.Filled" Color="Color.Primary" Type="submit" Class="ml-2" Style="background-color: #1976D2; color: white; border-radius: 8px; padding: 6px 14px;">Save</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>

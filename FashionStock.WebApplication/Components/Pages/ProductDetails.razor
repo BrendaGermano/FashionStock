@@ -27,10 +27,17 @@
   
         </MudPaper>
         <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
-            <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
-            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton>
-            <MudButton OnClick="OpenForm" Class="ml-1" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Add Image</MudButton>
+            <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Edit"
+                       Class="rounded-lg px-3" Style="background-color: rgba(100, 181, 246, 0.2); color: #0D47A1; font-weight: bold;">Edit</MudButton>
+            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Delete"
+                       Class="rounded-lg px-3 ml-2" Style="border-color: #64B5F6; color: #0D47A1; font-weight: bold;"> Delete </MudButton>
+            <MudButton OnClick="OpenForm" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
+                       Class="rounded-lg px-3 ml-2" Style="background-color: #64B5F6; color: white; font-weight: bold;">Add Image</MudButton>
 
+
+            @* <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
+            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton> *@
+            @* <MudButton OnClick="OpenForm" Class="ml-1" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Add Image</MudButton> *@
         </MudPaper>
     </MudItem>
     <MudItem xs="12" sm="5">
@@ -121,8 +128,12 @@
                                               @bind-Value="imageModel.Name" Required="true"/>
                             </MudCardContent>
                             <MudCardActions Class="justify-end">
-                                <MudButton OnClick="OpenForm" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Close" Class="ml-1">Close</MudButton>
-                                <MudButton OnClick="SaveImage" Class="ml-2" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Save</MudButton>
+                                <MudButton OnClick="OpenForm" Variant="Variant.Outlined" Color="Color.Info" StartIcon="@Icons.Material.Filled.Close"
+                                           Class="ml-1" Style="border-color: #42A5F5; color: #42A5F5;">Close</MudButton>
+                                <MudButton OnClick="SaveImage" Class="ml-2" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save"
+                                           Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Save</MudButton>
+                                @* <MudButton OnClick="OpenForm" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Close" Class="ml-1">Close</MudButton>
+                                <MudButton OnClick="SaveImage" Class="ml-2" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Save</MudButton> *@
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
