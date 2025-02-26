@@ -37,7 +37,7 @@
                 </MudGrid>
                 <MudCardActions Class="justify-end mt-3" Style="padding: 12px; border-top: 2px solid #64B5F6; background-color: #BBDEFB; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
                     <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="() => GoBack(productModel.Id)" Style="border-color: #64B5F6; color: #1565C0; border-radius: 8px; padding: 6px 14px;">Cancel</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" Style="background-color: #1976D2; color: white; border-radius: 8px; padding: 6px 14px;">Save Product</MudButton>
+                    <MudButton @onclick="SaveProduct" Variant="Variant.Filled" Color="Color.Success" Type="submit" Class="ml-2" Style="background-color: #1976D2; color: white; border-radius: 8px; padding: 6px 14px;">Save Product</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>
@@ -49,11 +49,13 @@
     public int Id { get; set; }
 
     private ProductModel productModel { get; set; } = new();
+
     private List<CategoryModel> _categories { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()
     {
         productModel = await WebApi.GetProduct(Id);
+
         _categories = await WebApi.GetCategories();
     }
 
@@ -61,6 +63,7 @@
     {
         var result = await WebApi.UpdateProduct(productModel);
         NavigationManager.NavigateTo("/products");
+
     }
 
     private void GoBack(int id)
