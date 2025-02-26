@@ -94,13 +94,36 @@
         }
     }
 
-    private void NavigationAddStock() => NavigationManager.NavigateTo("/addstockrecords", true);
+    private void NavigationAddStock()
+    {
+        NavigationManager.NavigateTo($"addstockrecords", true);
+    }
 
-    private void NavigationEditStock(int id) => NavigationManager.NavigateTo($"/stockrecords/edit/{id}", true);
+    private void NavigationEditStock(int id)
+    {
+        NavigationManager.NavigateTo($"/stockrecords/edit/{id}", true);
+    }
+    private string GetProductName(long productId)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (!product.Name.Any())
 
-    private string GetProductName(long productId) => _products.FirstOrDefault(p => p.Id == productId)?.Name ?? "Unknown Product";
+            return "Unknown Product";
+        return $"{product.Name}";
 
-    private string GetRecordTypeName(long recordId) => _recordTypes.FirstOrDefault(rt => rt.Id == recordId)?.Name ?? "Unknown Record Type";
+
+    }
+
+    private string GetRecordTypeName(long recordId)
+    {
+        var recordType = _recordTypes.FirstOrDefault(rt => rt.Id == recordId);
+        if (!recordType.Name.Any())
+
+            return "Unknown Record Type";
+        return $"{recordType.Name}";
+
+
+    }
 
     private async void DeleteRecord(long id, long productId, List<StockRecordModel> _records)
     {
