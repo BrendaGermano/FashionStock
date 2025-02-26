@@ -5,19 +5,18 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
-
-<MudContainer MaxWidth="MaxWidth.Small" Class="mt-4">
-    <MudCard Class="elevation-4" Style="background-color: #E3F2FD;">
-        <MudCardHeader>
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 d-flex justify-center" Style="background-color: #E3F2FD; padding: 20px; border-radius: 12px;">
+    <MudCard Class="elevation-4" Style="background-color: #BBDEFB; border-radius: 12px; width: 90vw; max-width: 1200px; padding: 16px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+        <MudCardHeader Class="border-bottom" Style="border-bottom: 2px solid #64B5F6; background-color: #BBDEFB; padding: 12px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
             <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Add Stock Record</MudText>
         </MudCardHeader>
 
         <MudCardContent>
             <EditForm FormName="AddStockRecordForm" Model="stockRecordModel">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <label for="ProductSelect">Select a product:</label>
-                        <select id="ProductSelect" class="form-control mr-1" @bind="@stockRecordModel.ProductId">
+                <MudGrid Class="justify-center" Style="display: flex; flex-wrap: wrap; gap: 16px;">
+                    <MudItem xs="12" md="6">
+                        <label for="ProductSelect" class="text-primary">Select a product:</label>
+                        <select id="ProductSelect" class="form-control" @bind="@stockRecordModel.ProductId" Style="background-color: white; border: 1px solid #64B5F6; border-radius: 8px; width: 100%; padding: 8px;">
                             <option value="">Select a Product</option>
                             @foreach (var product in _products)
                             {
@@ -25,9 +24,9 @@
                             }
                         </select>
                     </MudItem>
-                    <MudItem xs="12">
-                        <label for="RecordTypeSelect">Select a record type:</label>
-                        <select id="RecordTypeSelect" class="form-control mr-1" @bind="@stockRecordModel.RecordTypeId">
+                    <MudItem xs="12" md="6">
+                        <label for="RecordTypeSelect" class="text-primary">Select a record type:</label>
+                        <select id="RecordTypeSelect" class="form-control" @bind="@stockRecordModel.RecordTypeId" Style="background-color: white; border: 1px solid #64B5F6; border-radius: 8px; width: 100%; padding: 8px;">
                             <option value="">Select a Record Type</option>
                             @foreach (var type in _types)
                             {
@@ -35,45 +34,37 @@
                             }
                         </select>
                     </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField Label="Usuário" @bind-Value="stockRecordModel.UserId" Required="true" />
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Usuário" @bind-Value="stockRecordModel.UserId" Required="true" Style="background-color: white; border-radius: 8px; width: 100%; border: 1px solid #64B5F6; padding: 8px;" />
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField Label="Quantidade" @bind-Value="stockRecordModel.Quantity" Required="true" Type="number" />
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Quantidade" @bind-Value="stockRecordModel.Quantity" Required="true" Type="number" Style="background-color: white; border-radius: 8px; width: 100%; border: 1px solid #64B5F6; padding: 8px;" />
                     </MudItem>
                 </MudGrid>
 
-                <MudCardActions Class="justify-end mt-4">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
-                    <MudButton OnClick="() => AddRecord(_records)" Variant="Variant.Filled" Color="Color.Success" Class="ml-2">Save</MudButton>
+                <MudCardActions Class="justify-end mt-4" Style="padding: 12px; border-top: 2px solid #64B5F6; background-color: #BBDEFB; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel" Style="border-color: #64B5F6; color: #1565C0; border-radius: 8px; padding: 6px 12px;">Cancel</MudButton>
+                    <MudButton OnClick="() => AddRecord(_records)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-2" Style="background-color: #1976D2; color: white; border-radius: 8px; padding: 6px 12px;">Save</MudButton>
                 </MudCardActions>
             </EditForm>
         </MudCardContent>
     </MudCard>
 </MudContainer>
 
-
 @code {
-
     protected override async Task OnParametersSetAsync()
     {
         _products = await WebApi.GetProducts();
         _types = await WebApi.GetRecordTypes();
         _records = await WebApi.GetStockRecords();
-
     }
 
     private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
-
     private ProductModel productModel { get; set; } = new();
-
     private List<ProductModel> _products { get; set; } = new();
-
     private List<RecordTypeModel> _types { get; set; } = new();
-
     private List<StockRecordModel> _records { get; set; } = new();
 
-    
     private async Task AddRecord(List<StockRecordModel> _records)
     {
         productModel = await WebApi.GetProduct((int)stockRecordModel.ProductId);
@@ -82,61 +73,14 @@
         CalculateNewQuantity(productModel, _records);
     }
 
-    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel>_records)
+    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
     {
         productModel.CalculateFinalQuantity(_records);
         await WebApi.UpdateProduct(productModel);
-    }
-
-
-    private async Task SaveStockRecord()
-    {
-
-        var newStockRecord = new StockRecordModel();
-
-        newStockRecord.ProductId = stockRecordModel.ProductId;
-        newStockRecord.UserId = stockRecordModel.UserId;
-        newStockRecord.RecordTypeId = stockRecordModel.RecordTypeId;
-        newStockRecord.Quantity = stockRecordModel.Quantity;
-        newStockRecord.CreatedAt = DateTime.Now;
-        newStockRecord.UpdatedAt = DateTime.Now;
-        newStockRecord.Id = 0;
-
-        try
-        {
-            var stringJson = new StringContent(
-               System.Text.Json.JsonSerializer.Serialize(newStockRecord),
-               System.Text.Encoding.UTF8,
-               "application/json"
-        );
-
-
-            HttpClientHandler handler = new HttpClientHandler();
-
-            using (var client = new HttpClient(handler, false))
-            {
-                var response = await client.PostAsync("https://localhost:7281/addstockrecord", stringJson);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    NavigationManager.NavigateTo("/");
-
-                }
-            }
-
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Erro: {e.Message}");
-            throw;
-        }
     }
 
     private void Cancel()
     {
         NavigationManager.NavigateTo("/");
     }
-
-
 }
