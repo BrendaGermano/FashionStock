@@ -52,18 +52,25 @@
 </MudContainer>
 
 @code {
+
     protected override async Task OnParametersSetAsync()
     {
         _products = await WebApi.GetProducts();
         _types = await WebApi.GetRecordTypes();
         _records = await WebApi.GetStockRecords();
+
     }
 
     private StockRecordModel stockRecordModel { get; set; } = new StockRecordModel();
+
     private ProductModel productModel { get; set; } = new();
+
     private List<ProductModel> _products { get; set; } = new();
+
     private List<RecordTypeModel> _types { get; set; } = new();
+
     private List<StockRecordModel> _records { get; set; } = new();
+
 
     private async Task AddRecord(List<StockRecordModel> _records)
     {
@@ -79,8 +86,55 @@
         await WebApi.UpdateProduct(productModel);
     }
 
+
+    private async Task SaveStockRecord()
+    {
+
+        var newStockRecord = new StockRecordModel();
+
+        newStockRecord.ProductId = stockRecordModel.ProductId;
+        newStockRecord.UserId = stockRecordModel.UserId;
+        newStockRecord.RecordTypeId = stockRecordModel.RecordTypeId;
+        newStockRecord.Quantity = stockRecordModel.Quantity;
+        newStockRecord.CreatedAt = DateTime.Now;
+        newStockRecord.UpdatedAt = DateTime.Now;
+        newStockRecord.Id = 0;
+
+        try
+        {
+            var stringJson = new StringContent(
+               System.Text.Json.JsonSerializer.Serialize(newStockRecord),
+               System.Text.Encoding.UTF8,
+               "application/json"
+        );
+
+
+            HttpClientHandler handler = new HttpClientHandler();
+
+            using (var client = new HttpClient(handler, false))
+            {
+                var response = await client.PostAsync("https://localhost:7281/addstockrecord", stringJson);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/");
+
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            throw;
+        }
+    }
+
     private void Cancel()
     {
         NavigationManager.NavigateTo("/");
     }
+
+
 }
