@@ -87,8 +87,18 @@
         }
     }
 
-    private void NavigationAdd() => NavigationManager.NavigateTo("/addproducts", true);
-    private void NavigateDetails(int id) => NavigationManager.NavigateTo($"/product/{id}", true);
+    private void NavigationAdd()
+    {
+        NavigationManager.NavigateTo($"addproducts", true);
+
+    }
+
+    private void NavigateDetails(int id)
+
+    {
+        NavigationManager.NavigateTo($"/product/{id}", true);
+
+    }
 
     private bool FilterFunc(ProductModel product)
     {
