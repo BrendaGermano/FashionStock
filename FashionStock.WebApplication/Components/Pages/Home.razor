@@ -127,15 +127,18 @@
 
     private async void DeleteRecord(long id, long productId, List<StockRecordModel> _records)
     {
-        try
-        {
-            await WebApi.DeleteRecord(id);
-            await LoadStockRecords();
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Error deleting record: {ex.Message}", Severity.Error);
-        }
+        var record = _stockRecords.FirstOrDefault(r => r.Id == id);
+        var response = await WebApi.DeleteRecord(id);
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        _records = await WebApi.GetStockRecords();
+        CalculateNewQuantity(product, _records);
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
+    {
+        productModel.CalculateFinalQuantity(_records);
+        await WebApi.UpdateProduct(productModel);
     }
 
     private bool FilterFunc(StockRecordModel record)
