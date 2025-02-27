@@ -78,6 +78,7 @@
         var result = await WebApi.SaveStockRecord(stockRecordModel);
         _records = await WebApi.GetStockRecords();
         CalculateNewQuantity(productModel, _records);
+        NavigationManager.NavigateTo("/");
     }
 
     private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
