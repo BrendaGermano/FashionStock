@@ -1,0 +1,107 @@
+﻿@page "/dashboard"
+@using FashionStock.WebApi.Models
+@inject IWebApi WebApi
+
+
+<MudContainer>
+    <MudGrid Spacing="3">
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="mdi-package-variant-closed" Class="mr-2" /> Low Stock Products
+                    </MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@lowStockData" InputLabels="@lowStockLabels" Width="300px" Height="300px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="mdi-chart-bar" Class="mr-2" /> Best Selling Products
+                    </MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@topSellingProductsData" InputLabels="@topSellingProductsLabels" Width="300px" Height="300px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="mdi-chart-donut" Class="mr-2" /> Best Selling Categories
+                    </MudText>
+                    <MudChart ChartType="ChartType.Pie" InputData="@topSellingCategoriesData" InputLabels="@topSellingCategoriesLabels" Width="300px" Height="300px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Class="mt-4">
+        <MudItem xs="12">
+            <MudCard Class="pa-4 text-center">
+                <MudCardContent>
+                    <MudText Typo="Typo.h5">
+                        <MudIcon Icon="mdi-cash-multiple" Class="mr-2" /> Total Stock Value:
+                        <span style="color: #4CAF50;">@totalStockValue.ToString("C2")</span>
+                    </MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private double[] lowStockData;
+    private string[] lowStockLabels;
+
+    private double[] topSellingProductsData;
+    private string[] topSellingProductsLabels;
+
+    private double[] topSellingCategoriesData;
+    private string[] topSellingCategoriesLabels;
+
+    private decimal totalStockValue; // Mantendo decimal para maior precisão
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadLowStockData();
+        await LoadTopSellingProductsData();
+        await LoadTopSellingCategoriesData();
+        await LoadTotalStockValue();
+    }
+
+    private async Task LoadLowStockData()
+    {
+        var products = await WebApi.GetLowStock();
+        lowStockData = products.Select(p => (double)p.Quantity).ToArray();
+        lowStockLabels = products.Select(p => p.Name).ToArray();
+    }
+
+    private async Task LoadTopSellingProductsData()
+    {
+        var products = await WebApi.GetTopSellingProducts();
+        topSellingProductsData = products.Select(p => (double)p.TotalSold).ToArray();
+        topSellingProductsLabels = products.Select(p => p.Name).ToArray();
+    }
+
+    private async Task LoadTopSellingCategoriesData()
+    {
+        var categories = await WebApi.GetTopSellingCategories();
+        topSellingCategoriesData = categories.Select(c => (double)c.TotalSold).ToArray();
+        topSellingCategoriesLabels = categories.Select(c => c.Name).ToArray();
+    }
+
+    private async Task LoadTotalStockValue()
+    {
+        var totalStockResponse = await WebApi.GetTotalStockValue();
+        totalStockValue = totalStockResponse.TotalValue;
+    }
+}
+
+
+
+
+

@@ -8,9 +8,11 @@ namespace FashionStock.Entities
 {
     public class StockRecord : BaseEntity
     {
-        public int ProductId {  get; set; }
+        public long ProductId {  get; set; }
+        public Product Product { get; set; }
         public int UserId { get; set; }
-        public int RecordTypeId { get; set; }
+        public long RecordTypeId { get; set; }
+        public RecordType RecordType { get; set; }
         public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

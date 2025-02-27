@@ -5,7 +5,6 @@ using FashionStock.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FashionStock.WebApi.Models;
 using System.Collections;
 
 namespace FashionStock.WebApi.Controllers
@@ -101,6 +100,7 @@ namespace FashionStock.WebApi.Controllers
             else
                 return Ok(productTable);
         }
+
         [HttpPut("/updateproduct")]
         public async Task<IActionResult> UpdateProduct(ProductModel productmodel)
         {
@@ -115,7 +115,6 @@ namespace FashionStock.WebApi.Controllers
             product.Price = productmodel.Price;
             product.CategoryId = productmodel.CategoryId;
             product.Quantity = productmodel.Quantity;
-            product.CreatedAt = DateTime.Now;
             product.UpdatedAt = DateTime.Now;
 
 

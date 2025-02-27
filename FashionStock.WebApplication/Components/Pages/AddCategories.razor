@@ -1,0 +1,111 @@
+﻿@page "/addcategory"
+@using FashionStock.WebApi.Models
+@rendermode InteractiveServer
+@inject IWebApi WebApi
+@inject NavigationManager NavigationManager
+
+<style>
+    body {
+        background-color: #E3F2FD;
+    }
+
+    /* For WebKit browsers */
+    ::-webkit-scrollbar {
+        width: 6px; /* width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f0f0f0; /* background of the scrollbar track */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #0D47A1; /* scrollbar color */
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #001669; /* darker shade on hover */
+        }
+</style>
+
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 d-flex justify-center" Style="background-color: #E3F2FD; padding: 20px; border-radius: 12px;">
+    <MudCard Class="elevation-4" Style="background-color: #BBDEFB; border-radius: 12px; width: 90vw; max-width: 1200px; padding: 16px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+        <MudCardHeader Class="border-bottom" Style="border-bottom: 2px solid #64B5F6; background-color: #BBDEFB; padding: 12px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="text-primary">Add New Category</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <EditForm FormName="AddCategory" Model="categoryModel">
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Name" @bind-Value="categoryModel.Name" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="Description" @bind-Value="categoryModel.Description" Required="true" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudCardActions Class="justify-end mt-4">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel" Style="border-color: #64B5F6; color: #1565C0; border-radius: 8px; padding: 6px 12px;">Cancel</MudButton>
+                    <MudButton OnClick="AddCategory" Variant="Variant.Filled" Color="Color.Primary" Class="ml-2" Style="background-color: #1976D2; color: white; border-radius: 8px; padding: 6px 12px;">Save</MudButton>
+                </MudCardActions>
+            </EditForm>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+
+@code {
+    private CategoryModel categoryModel { get; set; } = new();
+
+    private async Task SaveCategory()
+    {
+        var result = await WebApi.AddCategory(categoryModel);
+    }
+
+
+    private async Task AddCategory()
+    {
+
+        var newCategory = new CategoryModel();
+        newCategory.Name = categoryModel.Name;
+        newCategory.Description = categoryModel.Description;
+        newCategory.CreatedAt = DateTime.Now;
+        newCategory.UpdatedAt = DateTime.Now;
+        newCategory.Id = 0;
+
+        try
+        {
+            var stringJson = new StringContent(
+               System.Text.Json.JsonSerializer.Serialize(newCategory),
+               System.Text.Encoding.UTF8,
+               "application/json"
+        );
+
+
+            HttpClientHandler handler = new HttpClientHandler();
+
+            using (var client = new HttpClient(handler, false))
+            {
+                var response = await client.PostAsync("https://localhost:7281/addcategories", stringJson);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/");
+
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            throw;
+        }
+    }
+       private void Cancel()
+      {
+        NavigationManager.NavigateTo("/");
+      }
+
+ }

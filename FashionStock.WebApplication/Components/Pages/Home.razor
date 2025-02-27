@@ -1,7 +1,150 @@
 ﻿@page "/"
+@inject IWebApi WebApi
+@using FashionStock.Entities
+@using FashionStock.WebApi.Models
+@using MudBlazor
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
-<PageTitle>Home</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4 px-4 py-4" Style="background-color: #E3F2FD;">
+    <MudCard Class="elevation-8" Style="background-color: #BBDEFB; border-radius: 12px;">
+        <MudCardHeader Class="text-center">
+            <MudText Typo="Typo.h5" Class="text-primary">Stock Records Management</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTextField @bind-Value="SearchString" Placeholder="Search..." Adornment="Adornment.Start" AdornmentIcon="Icons.Material.Filled.Search" Class="mb-3 w-100" Style="background-color: #E3F2FD;" />
 
-<h1>Hello, world!</h1>
+            @if (IsLoading)
+            {
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+            }
+            else
+            {
+                <MudTable Items="_stockRecords" Dense="true" Hover="true" Striped="true" Filter="FilterFunc" Class="mud-table-custom">
+                    <HeaderContent>
+                        <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Product</MudText></MudTh>
+                        <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Record Type</MudText></MudTh>
+                        <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Quantity</MudText></MudTh>
+                        <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Created At</MudText></MudTh>
+                        <MudTh><MudText Typo="Typo.subtitle2" Class="text-primary">Actions</MudText></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd><MudText Typo="Typo.body1">@GetProductName(context.ProductId)</MudText></MudTd>
+                        <MudTd><MudText Typo="Typo.body1">@GetRecordTypeName(context.RecordTypeId)</MudText></MudTd>
+                        <MudTd><MudText Typo="Typo.body1">@context.Quantity</MudText></MudTd>
+                        <MudTd><MudText Typo="Typo.body1">@context.CreatedAt.ToString("g")</MudText></MudTd>
+                        <MudTd>
+                            <MudButton OnClick="() => NavigationEditStock(context.Id)" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Edit" Class="rounded-lg px-3" Style="background-color: rgba(100, 181, 246, 0.2); color: #0D47A1; font-weight: bold;">
+                                Edit
+                            </MudButton>
+                            <MudButton OnClick="() => DeleteRecord(context.Id, context.ProductId, _stockRecords)" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Delete" Class="rounded-lg px-3 ml-2" Style="border-color: #64B5F6; color: #0D47A1; font-weight: bold;">
+                                Delete
+                            </MudButton>
+                        </MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudTd ColSpan="5">
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Style="background-color: #E3F2FD; border-color: #64B5F6;">
+                                No stock records available
+                            </MudAlert>
+                        </MudTd>
+                    </NoRecordsContent>
+                </MudTable>
+            }
+        </MudCardContent>
+        <MudCardActions Class="justify-end">
+            <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Add" Class="rounded-lg px-3" OnClick="NavigationAddStock" Style="background-color: rgba(66, 165, 245, 0.8); color: #0D47A1; font-weight: bold;">
+                Add Stock Record
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudContainer>
 
-Welcome to your new app.
+@code {
+    private List<ProductModel> _products = new();
+    private List<StockRecordModel> _stockRecords = new();
+    private List<RecordTypeModel> _recordTypes = new();
+
+    private bool IsLoading = true;
+    private string SearchString = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadStockRecords();
+    }
+
+    private async Task LoadStockRecords()
+    {
+        IsLoading = true;
+        try
+        {
+            _stockRecords = await WebApi.GetStockRecords();
+            _products = await WebApi.GetProducts();
+            _recordTypes = await WebApi.GetRecordTypes();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading records: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void NavigationAddStock()
+    {
+        NavigationManager.NavigateTo($"addstockrecords", true);
+    }
+
+    private void NavigationEditStock(int id)
+    {
+        NavigationManager.NavigateTo($"/stockrecords/edit/{id}", true);
+    }
+    private string GetProductName(long productId)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (!product.Name.Any())
+
+            return "Unknown Product";
+        return $"{product.Name}";
+
+
+    }
+
+    private string GetRecordTypeName(long recordId)
+    {
+        var recordType = _recordTypes.FirstOrDefault(rt => rt.Id == recordId);
+        if (!recordType.Name.Any())
+
+            return "Unknown Record Type";
+        return $"{recordType.Name}";
+
+
+    }
+
+    private async void DeleteRecord(long id, long productId, List<StockRecordModel> _records)
+    {
+        var record = _stockRecords.FirstOrDefault(r => r.Id == id);
+        var response = await WebApi.DeleteRecord(id);
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        _records = await WebApi.GetStockRecords();
+        CalculateNewQuantity(product, _records);
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    private async Task CalculateNewQuantity(ProductModel productModel, List<StockRecordModel> _records)
+    {
+        productModel.CalculateFinalQuantity(_records);
+        await WebApi.UpdateProduct(productModel);
+    }
+
+    private bool FilterFunc(StockRecordModel record)
+    {
+        if (string.IsNullOrWhiteSpace(SearchString)) return true;
+        return GetProductName(record.ProductId).Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+               GetRecordTypeName(record.RecordTypeId).Contains(SearchString, StringComparison.OrdinalIgnoreCase);
+    }
+}
