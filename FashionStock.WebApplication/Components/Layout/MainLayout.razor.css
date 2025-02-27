@@ -1,7 +1,9 @@
+
 .page {
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: #E3F2FD;
 }
 
 main {
