@@ -5,14 +5,20 @@
 @inject NavigationManager NavigationManager
 
 
-<MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 60vh">
+<style>
+    body{
+        background-color: #E3F2FD;
+    }
+</style>
+
+<MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center">
     <MudItem xs="12" sm="5">
-        <MudPaper Class="pa-4 mt-3" Style="background-color: #E3F2FD;">
+        <MudPaper Class="pa-4 mt-3" Style="background-color: #BBDEFB;">
 
                 <MudText Typo="Typo.body2" Color="Color.Primary">Name</MudText>
                 <MudText Class="mb-3">@productModel.Name</MudText>
                 <MudText Typo="Typo.body2" Color="Color.Primary">Description</MudText>
-            <MudText Class="mb-3 overflow-auto" Style="max-height:150px;">
+            <MudText Class="mb-3" Style="max-height:150px; overflow-y:auto">
                 @productModel.Description
                  
             </MudText>
@@ -26,7 +32,7 @@
                 <MudText Class="mb-3">@productModel.UpdatedAt</MudText>
   
         </MudPaper>
-        <MudPaper Class="pa-4 mt-4" Style="background-color: #E3F2FD;">
+        <MudPaper Class="pa-4 mt-4" Style="background-color: #BBDEFB;">
             <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Edit"
                        Class="rounded-lg px-3" Style="background-color: rgba(100, 181, 246, 0.2); color: #0D47A1; font-weight: bold;">Edit</MudButton>
             <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Delete"
@@ -34,10 +40,6 @@
             <MudButton OnClick="OpenForm" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
                        Class="rounded-lg px-3 ml-2" Style="background-color: #64B5F6; color: white; font-weight: bold;">Add Image</MudButton>
 
-
-            @* <MudButton @onclick="() => NavigateDetails(productModel.Id)" Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Edit" Style="background: linear-gradient(45deg, #64B5F6, #42A5F5); color: white;">Edit</MudButton>
-            <MudButton @onclick="() => DeleteProduct(productModel.Id)" Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Class="ml-1">Delete</MudButton> *@
-            @* <MudButton OnClick="OpenForm" Class="ml-1" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" Style="background: linear-gradient(45deg, #81C784, #66BB6A); color: white;">Add Image</MudButton> *@
         </MudPaper>
     </MudItem>
     <MudItem xs="12" sm="5">
@@ -67,7 +69,7 @@
             </MudCarousel>
         </MudContainer>
     </MudItem>
-    <MudPaper Class="pa-4 mt-4" Style=" display: flex; background-color: #E3F2FD; width:130vh; overflow:auto;">
+    <MudPaper Class="pa-4 mt-4" Style=" display: flex; background-color: #BBDEFB; width:130vh; overflow:auto;">
 
         @if (Images.Where(i => i.ProductId.Equals(productModel.Id)).Any())
         {
@@ -105,7 +107,6 @@
         }
 
     </MudPaper>
-
 
 </MudGrid>
 
