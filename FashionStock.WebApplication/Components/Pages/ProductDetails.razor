@@ -9,6 +9,23 @@
     body{
         background-color: #E3F2FD;
     }
+
+    /* For WebKit browsers */
+    ::-webkit-scrollbar {
+        width: 6px; /* width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f0f0f0; /* background of the scrollbar track */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #0D47A1; /* scrollbar color */
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #001669; /* darker shade on hover */
+        }
 </style>
 
 <MudGrid Justify="Justify.Center" AlignItems="AlignItems.Center">
@@ -28,6 +45,8 @@
                 <MudText Class="mb-3">@productModel.Quantity</MudText>
                 <MudText Typo="Typo.body2" Color="Color.Primary">Category</MudText>
                 <MudText Class="mb-3">@categoryModel.Name</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">Created at:</MudText>
+                <MudText Class="mb-3">@productModel.CreatedAt</MudText>
                 <MudText Typo="Typo.body2" Color="Color.Primary">Last Updated at:</MudText>
                 <MudText Class="mb-3">@productModel.UpdatedAt</MudText>
   
@@ -44,7 +63,7 @@
     </MudItem>
     <MudItem xs="12" sm="5">
         <MudContainer Class="pa-4 mud-height-full">
-            <MudCarousel Class="mud-width-full" Style="height:50vh; width:50vh;" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" TData="object">
+            <MudCarousel Class="mud-width-full" Style="height:50vh; width:50vh;" BulletsColor="Color.Primary" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" TData="object">
                 @if (!Images.Where(i => i.ProductId.Equals(productModel.Id)).Any())
                 {
                     <MudCarouselItem Transition="Transition.None" Color="@Color.Primary">
